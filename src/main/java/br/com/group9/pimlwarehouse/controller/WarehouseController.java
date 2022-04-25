@@ -1,4 +1,39 @@
 package br.com.group9.pimlwarehouse.controller;
 
-public class WarehouseController {
+import br.com.group9.pimlwarehouse.dto.SectionDTO;
+import br.com.group9.pimlwarehouse.dto.WarehouseDTO;
+import br.com.group9.pimlwarehouse.entity.Section;
+import br.com.group9.pimlwarehouse.entity.Warehouse;
+import br.com.group9.pimlwarehouse.mapper.WarehouseMapper;
+import br.com.group9.pimlwarehouse.service.WarehouseService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
+
+@RestController
+public class WarehouseController extends APIController{
+    private static final String BASE_PATH = "/warehouse";
+    private WarehouseService warehouseService;
+
+    public WarehouseController(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
+    }
+
+    @PostMapping(BASE_PATH)
+    public ResponseEntity<WarehouseDTO> createWarehouse(@Valid @RequestBody WarehouseDTO warehouseDTO, UriComponentsBuilder uriBuilder) {
+        Warehouse mappedWarehouse = warehouseDTO.map();
+        Warehouse savedWarehouse = warehouseService.createWarehouse(mappedWarehouse);
+        WarehouseDTO resultWarehouse = WarehouseDTO.map(savedWarehouse);
+        URI uri = uriBuilder
+                .path(BASE_PATH.concat("/{id}"))
+                .buildAndExpand(resultWarehouse.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(resultWarehouse);
+    }
 }
