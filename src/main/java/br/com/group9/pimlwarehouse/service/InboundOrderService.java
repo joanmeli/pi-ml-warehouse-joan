@@ -1,5 +1,6 @@
 package br.com.group9.pimlwarehouse.service;
 
+import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,10 @@ public class InboundOrderService {
             throw new InboundOrderValidationException("SECTION_NOT_FOUND");
         }
 
+
+    }
+
+    public void save(InboundOrder order) {
 
     }
 }

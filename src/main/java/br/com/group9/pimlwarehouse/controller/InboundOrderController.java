@@ -24,6 +24,7 @@ public class InboundOrderController extends APIController{
         inboundOrderService.validateInboundOrder(
                 order.getSection().getWarehouseCode(), order.getSection().getSectionCode()
         );
+        inboundOrderService.save(order.convert());
 
         URI uri = uriBuilder
                 .path("foo")

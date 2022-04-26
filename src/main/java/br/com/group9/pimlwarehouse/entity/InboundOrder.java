@@ -20,4 +20,9 @@ public class InboundOrder {
     @JoinColumn(name="section_id")
     private Section sections;
     private LocalDateTime orderDate;
+
+    public InboundOrder(Section sections, LocalDateTime orderDate) {
+        this.sections = sections;
+        this.orderDate = orderDate;
+    }
 }
