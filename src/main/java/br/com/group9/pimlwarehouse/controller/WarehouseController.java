@@ -1,12 +1,8 @@
 package br.com.group9.pimlwarehouse.controller;
 
-import br.com.group9.pimlwarehouse.dto.SectionDTO;
 import br.com.group9.pimlwarehouse.dto.WarehouseDTO;
-import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
-import br.com.group9.pimlwarehouse.mapper.WarehouseMapper;
 import br.com.group9.pimlwarehouse.service.WarehouseService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

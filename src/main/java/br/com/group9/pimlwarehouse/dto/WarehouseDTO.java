@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,13 +21,14 @@ public class WarehouseDTO {
     private String name;
 
     @Valid
-    private List<SectionDTO> sectionDTOS;
+    @NotEmpty(message = "Informar ao menos 1 Setor no Armazém.")
+    private List<SectionDTO> sections;
 
     public Warehouse map() {
         return Warehouse.builder()
                 .id(this.id)
                 .name(this.name)
-                .sections(sectionDTOS.stream().map(SectionDTO::map).collect(Collectors.toList()))
+                .sections(sections.stream().map(SectionDTO::map).collect(Collectors.toList()))
                 .build();
     }
 
@@ -34,7 +36,7 @@ public class WarehouseDTO {
         return WarehouseDTO.builder()
                 .id(warehouse.getId())
                 .name(warehouse.getName())
-                .sectionDTOS(warehouse.getSections().stream().map(SectionDTO::map).collect(Collectors.toList()))
+                .sections(warehouse.getSections().stream().map(SectionDTO::map).collect(Collectors.toList()))
                 .build();
     }
 }
