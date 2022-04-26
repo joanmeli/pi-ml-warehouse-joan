@@ -1,6 +1,7 @@
 package br.com.group9.pimlwarehouse.dto;
 
 import br.com.group9.pimlwarehouse.entity.BatchStock;
+import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.entity.Section;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,5 +23,9 @@ public class InboundOrderDTO {
     private InboundOrderSectionDTO section;
     @JsonProperty(value = "batchStock")
     private List<BatchStockDTO> batchStockList;
+
+//    public static InboundOrder convert(InboundOrderDTO order){
+//        return new InboundOrder()
+//    }
 
 }

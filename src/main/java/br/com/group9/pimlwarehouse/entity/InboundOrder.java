@@ -1,10 +1,23 @@
 package br.com.group9.pimlwarehouse.entity;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@Entity
+@Table(name = "inboundOrder")
 public class InboundOrder {
-    Long id;
-    Long sectionId;
-    Long batchStockId;
-    LocalDateTime orderDate;
+    @Id
+    @Column(name = "inboundOrder_id")
+    private Long id;
+    @ManyToOne()
+    @JoinColumn(name="section_id")
+    private Section sections;
+    private LocalDateTime orderDate;
 }

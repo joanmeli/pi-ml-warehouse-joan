@@ -20,12 +20,14 @@ public class InboundOrderController extends APIController{
     public ResponseEntity<InboundOrderDTO> createInboundOrder(
             @RequestBody InboundOrderDTO order, UriComponentsBuilder uriBuilder
     ){
+        // Validar ordem de entradada
         inboundOrderService.validateInboundOrder(
                 order.getSection().getWarehouseCode(), order.getSection().getSectionCode()
         );
+
         URI uri = uriBuilder
-                .path("aedeqdeq")
-                .buildAndExpand(12)
+                .path("foo")
+                .buildAndExpand(42)
                 .toUri();
 
         return ResponseEntity.created(uri).body(order);
