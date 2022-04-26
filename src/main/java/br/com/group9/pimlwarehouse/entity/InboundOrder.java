@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "inboundOrder")
 public class InboundOrder {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inboundOrder_id")
     private Long id;
     @ManyToOne()

@@ -2,11 +2,10 @@ package br.com.group9.pimlwarehouse.entity;
 
 import lombok.*;
 
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 public class BatchStock {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long Id;
     @ManyToOne()
     @JoinColumn(name="inboundOrder_id")
@@ -25,5 +25,5 @@ public class BatchStock {
     LocalDate duedate;
     LocalDateTime manufacturingDate;
     Integer initialQuantity;
-    Integer currentQunatity;
+    Integer currentQuantity;
 }
