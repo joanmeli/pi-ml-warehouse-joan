@@ -1,6 +1,7 @@
 package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
+import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
@@ -27,19 +28,24 @@ public class InboundOrderService {
     }
 
     public void validateInboundOrder(
-            String warehouseId, String sectorId, List<BatchStockDTO> batchStockDTOS
+            Long warehouseId, Long sectorId, List<BatchStock> batchStocks
     ) {
         // Verifica se armazem existe
-        if (!warehouseService.exists(Long.valueOf(warehouseId))){
+        if (!warehouseService.exists(warehouseId)){
             throw new InboundOrderValidationException("WAREHOUSE_NOT_FOUND");
         }
         // validar o setor
-        sectionService.validateSection(Long.valueOf(sectorId), batchStockDTOS);
+        sectionService.validateSection(sectorId, batchStocks);
 
 
     }
 
-    public InboundOrder save (InboundOrder order) {
+    public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
+        // Validar ordem de entrada
+        validateInboundOrder(
+                order.getSection().getWarehouse().getId(), order.getSection().getId(),
+                batchStocks
+        );
         return inboundOrderRepository.save(order);
     }
 }
