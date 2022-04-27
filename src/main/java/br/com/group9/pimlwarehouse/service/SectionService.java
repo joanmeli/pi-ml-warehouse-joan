@@ -7,6 +7,8 @@ import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
 import br.com.group9.pimlwarehouse.repository.SectionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SectionService {
     private SectionRepository sectionRepository;
@@ -17,6 +19,11 @@ public class SectionService {
         this.sectionRepository = sectionRepository;
         this.sectionProductService = sectionProductService;
         this.productAPIService = productAPIService;
+    }
+
+    public boolean exists(Long id) {
+        Optional<Section> op = this.sectionRepository.findById(id);
+        return op.isPresent();
     }
 
     public Section associateProductToSectionByIds(Long sectionId, Long productId) {
@@ -35,5 +42,4 @@ public class SectionService {
 
         return this.sectionRepository.save(foundSection);
     }
-
 }
