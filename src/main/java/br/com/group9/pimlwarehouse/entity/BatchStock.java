@@ -12,18 +12,20 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
+@Entity
+@Table(name = "batchStock")
 public class BatchStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
+    private Long Id;
     @ManyToOne()
     @JoinColumn(name="inboundOrder_id")
-    InboundOrder inboundOrder;
-
-    Long productid;
-    Integer batchNumber;
-    LocalDate duedate;
-    LocalDateTime manufacturingDate;
-    Integer initialQuantity;
-    Integer currentQuantity;
+    private InboundOrder inboundOrder;
+    private Long productSize;
+    private Long productId;
+    private Integer batchNumber;
+    private LocalDate dueDate;
+    private LocalDateTime manufacturingDate;
+    private Integer initialQuantity;
+    private Integer currentQuantity;
 }
