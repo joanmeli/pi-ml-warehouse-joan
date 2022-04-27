@@ -1,11 +1,13 @@
 package br.com.group9.pimlwarehouse.dto;
 
 import br.com.group9.pimlwarehouse.entity.Warehouse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,7 @@ public class WarehouseDTO {
 
     @Valid
     @NotEmpty(message = "Informar ao menos 1 Setor no Armazém.")
+    @JsonIgnoreProperties({"products"})
     private List<SectionDTO> sections;
 
     public Warehouse map() {
@@ -33,10 +36,12 @@ public class WarehouseDTO {
     }
 
     public static WarehouseDTO map(Warehouse warehouse) {
+        List<SectionDTO> sectionDTOS = new ArrayList<>();
+        warehouse.getSections().forEach(s -> sectionDTOS.add(SectionDTO.simpleMap(s)));
         return WarehouseDTO.builder()
                 .id(warehouse.getId())
                 .name(warehouse.getName())
-                .sections(warehouse.getSections().stream().map(SectionDTO::map).collect(Collectors.toList()))
+                .sections(sectionDTOS)
                 .build();
     }
 }

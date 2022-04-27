@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "sectionProduct")
+@IdClass(SectionProductId.class)
 public class SectionProduct {
 
     @Id
@@ -21,9 +22,11 @@ public class SectionProduct {
 
     @ManyToOne
     @JoinColumn(name = "section_id")
+    @Id
     private Section sectionId;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @Id
     private Product productId;
 }

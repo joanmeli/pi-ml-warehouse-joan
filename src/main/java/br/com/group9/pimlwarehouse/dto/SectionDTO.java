@@ -1,11 +1,11 @@
 package br.com.group9.pimlwarehouse.dto;
 
 import br.com.group9.pimlwarehouse.entity.Section;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +24,8 @@ public class SectionDTO {
     @NotNull(message = "Informar a capacidade de armazenamento do Setor.")
     private Integer size;
 
+    private List<SectionProductDTO> products;
+
     public Section map() {
         return Section.builder()
                 .id(this.id)
@@ -33,12 +35,24 @@ public class SectionDTO {
                 .build();
     }
 
-    public static SectionDTO map(Section section){
+    public static SectionDTO simpleMap(Section section){
         return SectionDTO.builder()
                 .id(section.getId())
                 .minimalTemperature(section.getMinimalTemperature())
                 .maximalTemperature(section.getMaximalTemperature())
                 .size(section.getSize())
+                .build();
+    }
+
+    public static SectionDTO map(Section section){
+        List<SectionProductDTO> sectionProductDTOS = new ArrayList<>();
+        section.getProducts().forEach(p -> sectionProductDTOS.add(SectionProductDTO.map(p)));
+        return SectionDTO.builder()
+                .id(section.getId())
+                .minimalTemperature(section.getMinimalTemperature())
+                .maximalTemperature(section.getMaximalTemperature())
+                .size(section.getSize())
+                .products(sectionProductDTOS)
                 .build();
     }
 }

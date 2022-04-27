@@ -28,7 +28,7 @@ public class Section {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "sectionProduct",
             joinColumns = {
@@ -40,4 +40,14 @@ public class Section {
     )
     private List<Product> products;
 
+    @OneToMany(mappedBy = "sectionId", cascade = CascadeType.ALL)
+    private List<SectionProduct> sectionProducts;
+
+    public void addSectionProduct(Long productId) {
+        SectionProduct newSectionProduct = SectionProduct.builder()
+                .sectionId(this)
+                .productId(Product.builder().id(productId).build())
+                .build();
+        this.sectionProducts.add(newSectionProduct);
+    }
 }
