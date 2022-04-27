@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SectionService {
     private SectionRepository sectionRepository;
+    private SectionProductService sectionProductService;
 
-    public SectionService(SectionRepository sectionRepository) {
+    public SectionService(SectionRepository sectionRepository, SectionProductService sectionProductService) {
         this.sectionRepository = sectionRepository;
+        this.sectionProductService = sectionProductService;
     }
 
     public Section associateProductToSectionByIds(Long sectionId, Long productId) {
@@ -20,9 +22,11 @@ public class SectionService {
         // TODO: 26/04/22 Include call with Product API to validate if the given Product exists by productID.
 
         SectionProduct newSectionProduct = SectionProduct.builder()
-                .sectionId(foundSection)
+                .section(foundSection)
                 .productId(productId)
                 .build();
+        if(this.sectionProductService.exists(newSectionProduct))
+            throw new RuntimeException("Produto já associado ao setor!");
         foundSection.addSectionProduct(newSectionProduct);
 
         return this.sectionRepository.save(foundSection);

@@ -11,8 +11,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "sectionProduct")
-@IdClass(SectionProductId.class)
+@Table(
+    name = "sectionProduct",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"section_id", "product_id"})
+    }
+)
+//@IdClass(SectionProductId.class)
 public class SectionProduct {
 
     @Id
@@ -22,9 +27,10 @@ public class SectionProduct {
 
     @ManyToOne
     @JoinColumn(name = "section_id")
-    @Id
-    private Section sectionId;
+//    @Id
+    private Section section;
 
-    @Id
+//    @Id
+    @Column(name = "product_id")
     private Long productId;
 }

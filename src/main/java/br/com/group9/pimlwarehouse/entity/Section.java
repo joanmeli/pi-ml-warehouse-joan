@@ -28,7 +28,7 @@ public class Section {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    @OneToMany(mappedBy = "sectionId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
     private List<SectionProduct> sectionProducts;
 
     public void addSectionProduct(SectionProduct sectionProduct) {
