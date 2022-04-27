@@ -4,5 +4,5 @@ import java.io.Serializable;
 
 public class SectionProductId implements Serializable {
     private Section sectionId;
-    private Product productId;
+    private Long productId;
 }

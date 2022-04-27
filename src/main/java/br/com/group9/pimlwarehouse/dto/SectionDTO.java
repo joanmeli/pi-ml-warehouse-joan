@@ -46,7 +46,7 @@ public class SectionDTO {
 
     public static SectionDTO map(Section section){
         List<SectionProductDTO> sectionProductDTOS = new ArrayList<>();
-        section.getProducts().forEach(p -> sectionProductDTOS.add(SectionProductDTO.map(p)));
+        section.getSectionProducts().forEach(p -> sectionProductDTOS.add(SectionProductDTO.map(p)));
         return SectionDTO.builder()
                 .id(section.getId())
                 .minimalTemperature(section.getMinimalTemperature())

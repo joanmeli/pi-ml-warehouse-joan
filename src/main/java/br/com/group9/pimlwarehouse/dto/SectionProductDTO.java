@@ -1,6 +1,6 @@
 package br.com.group9.pimlwarehouse.dto;
 
-import br.com.group9.pimlwarehouse.entity.Product;
+import br.com.group9.pimlwarehouse.entity.SectionProduct;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -13,9 +13,9 @@ public class SectionProductDTO {
     @NotNull(message = "Informar o número do Produto.")
     private Long productId;
 
-    public static SectionProductDTO map(Product product){
+    public static SectionProductDTO map(SectionProduct sectionProduct){
         return SectionProductDTO.builder()
-                .productId(product.getId())
+                .productId(sectionProduct.getProductId())
                 .build();
     }
 }

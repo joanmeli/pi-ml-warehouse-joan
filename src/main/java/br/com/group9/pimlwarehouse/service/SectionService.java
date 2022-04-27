@@ -1,6 +1,7 @@
 package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.entity.Section;
+import br.com.group9.pimlwarehouse.entity.SectionProduct;
 import br.com.group9.pimlwarehouse.repository.SectionRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,11 @@ public class SectionService {
 
         // TODO: 26/04/22 Include call with Product API to validate if the given Product exists by productID.
 
-        foundSection.addSectionProduct(productId);
+        SectionProduct newSectionProduct = SectionProduct.builder()
+                .sectionId(foundSection)
+                .productId(productId)
+                .build();
+        foundSection.addSectionProduct(newSectionProduct);
 
         return this.sectionRepository.save(foundSection);
     }

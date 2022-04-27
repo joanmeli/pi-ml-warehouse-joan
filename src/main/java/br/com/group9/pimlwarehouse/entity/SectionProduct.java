@@ -25,8 +25,6 @@ public class SectionProduct {
     @Id
     private Section sectionId;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
     @Id
-    private Product productId;
+    private Long productId;
 }
