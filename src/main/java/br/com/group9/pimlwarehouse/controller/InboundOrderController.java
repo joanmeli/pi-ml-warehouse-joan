@@ -29,7 +29,7 @@ public class InboundOrderController extends APIController{
     }
 
     @PostMapping("/fresh-products/inboundorder")
-    public ResponseEntity<List<BatchStock>> createInboundOrder(
+    public ResponseEntity<List<BatchStockDTO>> createInboundOrder(
             @RequestBody InboundOrderDTO order, UriComponentsBuilder uriBuilder
     ){
         // Validar ordem de entrada
@@ -42,12 +42,13 @@ public class InboundOrderController extends APIController{
         List<BatchStock> batchStocks = batchStockService.save(
                 BatchStockDTO.convert(order.getBatchStockList(), orderSaved)
         );
+        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(batchStocks);
 
         URI uri = uriBuilder
                 .path("/fresh-products/inboundorder")
                 .buildAndExpand(orderSaved.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(batchStocks);
+        return ResponseEntity.created(uri).body(batchStockDTOS);
     }
 }

@@ -42,4 +42,19 @@ public class BatchStockDTO {
     public static List<BatchStock> convert(List<BatchStockDTO> batchStockDTOS, InboundOrder order){
         return batchStockDTOS.stream().map(e -> e.convert(order)).collect(Collectors.toList());
     }
+    private static BatchStockDTO convert(BatchStock batchStock){
+
+        return BatchStockDTO.builder()
+                .productId(batchStock.getProductId())
+                .batchNumber(batchStock.getBatchNumber())
+                .dueDate(batchStock.getDueDate())
+                .manufacturingDateTime(batchStock.getManufacturingDate())
+                .initialQuantity(batchStock.getInitialQuantity())
+                .currentQuantity(batchStock.getCurrentQuantity())
+                .build();
+    }
+
+    public static List<BatchStockDTO> convert(List<BatchStock> batchStocks) {
+        return batchStocks.stream().map(e -> convert(e)).collect(Collectors.toList());
+    }
 }
