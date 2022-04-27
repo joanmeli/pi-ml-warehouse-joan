@@ -1,15 +1,12 @@
 package br.com.group9.pimlwarehouse.service;
 
-import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
-import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class InboundOrderService {
@@ -35,7 +32,7 @@ public class InboundOrderService {
             throw new InboundOrderValidationException("WAREHOUSE_NOT_FOUND");
         }
         // validar o setor
-        sectionService.validateSection(sectorId, batchStocks);
+        sectionService.validateBatchStocksBySection(sectorId, batchStocks);
 
 
     }
