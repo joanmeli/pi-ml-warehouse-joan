@@ -28,7 +28,7 @@ public class InboundOrderDTO {
     public InboundOrder convert(){
 
         return InboundOrder.builder()
-                .sections(section.convert())
+                .section(section.convert())
                 .orderDate(orderDate)
                 .build();
     }

@@ -19,11 +19,11 @@ public class InboundOrder {
     private Long id;
     @ManyToOne()
     @JoinColumn(name="section_id")
-    private Section sections;
+    private Section section;
     private LocalDateTime orderDate;
 
-    public InboundOrder(Section sections, LocalDateTime orderDate) {
-        this.sections = sections;
+    public InboundOrder(Section section, LocalDateTime orderDate) {
+        this.section = section;
         this.orderDate = orderDate;
     }
 }
