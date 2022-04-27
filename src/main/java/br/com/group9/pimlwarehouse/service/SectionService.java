@@ -29,6 +29,10 @@ public class SectionService {
         return this.sectionRepository.findById(id);
     }
 
+    public Section findById(Long id) {
+        return get(id).orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
+    }
+
     private Long getTotalBatchSize(List<BatchStock> batchStocks){
         return batchStocks.stream().map(
                 e -> e.getProductSize() * e.getCurrentQuantity()

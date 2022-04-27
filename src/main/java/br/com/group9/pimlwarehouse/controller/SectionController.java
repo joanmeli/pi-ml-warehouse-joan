@@ -8,10 +8,7 @@ import br.com.group9.pimlwarehouse.entity.Warehouse;
 import br.com.group9.pimlwarehouse.service.SectionService;
 import br.com.group9.pimlwarehouse.service.WarehouseService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -29,9 +26,20 @@ public class SectionController extends APIController{
     @PostMapping(BASE_PATH + "/{sectionId}/product")
     public ResponseEntity<SectionDTO> associateProductToSection(
             @PathVariable(name = "sectionId") Long sectionId,
-            @Valid @RequestBody SectionProductDTO sectionProductDTO) {
+            @Valid @RequestBody SectionProductDTO sectionProductDTO,
+            UriComponentsBuilder uriBuilder) {
         Section newSection = sectionService.associateProductToSectionByIds(sectionId, sectionProductDTO.getProductId());
-        SectionDTO result = SectionDTO.map(newSection);
-        return ResponseEntity.created(null).body(result);
+        SectionDTO resultSection = SectionDTO.map(newSection);
+        URI uri = uriBuilder
+                .path(BASE_PATH.concat("/{id}"))
+                .buildAndExpand(resultSection.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(resultSection);
+    }
+
+    @GetMapping(BASE_PATH + "/{sectionId}")
+    public ResponseEntity<SectionDTO> findSection(@PathVariable(name = "sectionId") Long sectionId) {
+        Section foundSection = this.sectionService.findById(sectionId);
+        return ResponseEntity.ok(SectionDTO.map(foundSection));
     }
 }
