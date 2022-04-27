@@ -18,13 +18,13 @@ public class InboundOrderService {
         this.inboundOrderRepository = inboundOrderRepository;
     }
 
-    public void validateInboundOrder(String warehouseId, String sectorId){
+    public void validateInboundOrder(Long warehouseId, Long sectorId){
         // Verifica se armazem existe
-        if (!warehouseService.exists(Long.valueOf(warehouseId))){
+        if (!warehouseService.exists(warehouseId)){
             throw new InboundOrderValidationException("WAREHOUSE_NOT_FOUND");
         }
         // verifica se o setor existe
-        if (!sectionService.exists(Long.valueOf(sectorId))){
+        if (!sectionService.exists(sectorId)){
             throw new InboundOrderValidationException("SECTION_NOT_FOUND");
         }
 
@@ -32,6 +32,9 @@ public class InboundOrderService {
     }
 
     public InboundOrder save (InboundOrder order) {
+        validateInboundOrder(
+                order.getSection().getWarehouse().getId(), order.getSection().getId()
+        );
         return inboundOrderRepository.save(order);
     }
 }

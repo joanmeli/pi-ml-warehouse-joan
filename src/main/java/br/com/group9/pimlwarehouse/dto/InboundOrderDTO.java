@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 public class InboundOrderDTO {
-    private  String orderNumber;
+    private  Long orderNumber;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss")
     private LocalDateTime orderDate;
     private InboundOrderSectionDTO section;

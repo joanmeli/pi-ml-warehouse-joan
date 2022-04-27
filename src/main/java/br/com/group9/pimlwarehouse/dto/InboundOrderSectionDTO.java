@@ -10,13 +10,13 @@ import lombok.*;
 @Getter
 @Setter
 public class InboundOrderSectionDTO {
-    private String sectionCode;
-    private String warehouseCode;
+    private Long sectionCode;
+    private Long warehouseCode;
 
     public Section convert(){
         return Section.builder()
-                .id(Long.valueOf(sectionCode))
-                .warehouse(Warehouse.builder().id(Long.valueOf(warehouseCode)).build())
+                .id(sectionCode)
+                .warehouse(Warehouse.builder().id(warehouseCode).build())
                 .build();
 
     }
