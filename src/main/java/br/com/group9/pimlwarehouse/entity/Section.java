@@ -3,6 +3,7 @@ package br.com.group9.pimlwarehouse.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +27,6 @@ public class Section {
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
+    private List<InboundOrder> inboundOrders;
 }

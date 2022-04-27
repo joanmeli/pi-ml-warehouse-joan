@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +22,8 @@ public class InboundOrder {
     @JoinColumn(name="section_id")
     private Section section;
     private LocalDateTime orderDate;
+    @OneToMany(mappedBy = "inboundOrder", cascade = CascadeType.ALL)
+    private List<BatchStock> batchStocks;
 
     public InboundOrder(Section section, LocalDateTime orderDate) {
         this.section = section;
