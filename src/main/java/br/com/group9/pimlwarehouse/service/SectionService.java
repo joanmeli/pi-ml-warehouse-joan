@@ -45,7 +45,6 @@ public class SectionService {
         long requiredSpace = batchStocks.stream().map(
                 e -> e.getProductSize() * e.getCurrentQuantity()
         ).mapToLong(Long::longValue).sum();
-        System.out.println(availableSpace);
         if (requiredSpace > availableSpace){
             throw new InboundOrderValidationException("SECTION_SPACE_NOT_ENOUGH");
         }
