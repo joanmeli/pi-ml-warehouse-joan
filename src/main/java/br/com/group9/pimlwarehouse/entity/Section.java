@@ -31,6 +31,9 @@ public class Section {
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
     private List<SectionProduct> sectionProducts;
 
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
+    private List<InboundOrder> inboundOrders;
+
     public void addSectionProduct(SectionProduct sectionProduct) {
         this.sectionProducts.add(sectionProduct);
     }

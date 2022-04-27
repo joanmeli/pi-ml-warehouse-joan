@@ -29,7 +29,7 @@ public class BatchStockDTO {
 
         return BatchStock.builder()
                 .inboundOrder(order)
-                .productSize(21L) // TODO: add the real size of the product here
+                .productSize(10L) // TODO: add the real size of the product here
                 .productId(this.productId)
                 .batchNumber(this.batchNumber)
                 .dueDate(this.dueDate)
