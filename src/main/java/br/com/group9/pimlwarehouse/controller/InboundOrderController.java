@@ -39,7 +39,6 @@ public class InboundOrderController extends APIController{
                 BatchStockDTO.convert(order.getBatchStockList(), orderSaved)
         );
         List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(batchStocks);
-
         URI uri = uriBuilder
                 .path("/fresh-products/inboundorder")
                 .buildAndExpand(orderSaved.getId())
