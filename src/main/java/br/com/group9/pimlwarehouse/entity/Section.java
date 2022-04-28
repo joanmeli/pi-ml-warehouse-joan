@@ -27,6 +27,14 @@ public class Section {
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
+    private List<SectionProduct> sectionProducts;
+
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
     private List<InboundOrder> inboundOrders;
+
+    public void addSectionProduct(SectionProduct sectionProduct) {
+        this.sectionProducts.add(sectionProduct);
+    }
 }

@@ -7,6 +7,6 @@ import lombok.*;
 @Builder
 @Getter @Setter
 public class ProductDTO {
-    private Long productId;
-    private String productName;
+    private Long id;
+    private Double minimumTemperature;
 }
