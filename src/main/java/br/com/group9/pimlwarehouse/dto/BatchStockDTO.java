@@ -55,6 +55,6 @@ public class BatchStockDTO {
     }
 
     public static List<BatchStockDTO> convert(List<BatchStock> batchStocks) {
-        return batchStocks.stream().map(e -> convert(e)).collect(Collectors.toList());
+        return batchStocks.stream().map(BatchStockDTO::convert).collect(Collectors.toList());
     }
 }

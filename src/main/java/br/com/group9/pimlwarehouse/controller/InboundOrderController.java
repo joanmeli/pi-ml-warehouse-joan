@@ -8,6 +8,7 @@ import br.com.group9.pimlwarehouse.service.BatchStockService;
 import br.com.group9.pimlwarehouse.service.InboundOrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -45,6 +46,24 @@ public class InboundOrderController extends APIController{
         URI uri = uriBuilder
                 .path("/fresh-products/inboundorder")
                 .buildAndExpand(orderSaved.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(batchStockDTOS);
+    }
+
+    @PutMapping("/fresh-products/inboundorder")
+    public ResponseEntity<List<BatchStockDTO>> update(
+            @RequestBody  InboundOrderDTO order , UriComponentsBuilder uriBuilder
+    ){
+        InboundOrder orderToUpdate = inboundOrderService.get(order.getOrderNumber());
+        // Salvando os lotes
+        List<BatchStock> inboundOrderUpdated = batchStockService.update(
+                BatchStockDTO.convert(order.getBatchStockList(), orderToUpdate), orderToUpdate
+        );
+        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(inboundOrderUpdated);
+        URI uri = uriBuilder
+                .path("/fresh-products/inboundorder")
+                .buildAndExpand(orderToUpdate.getId())
                 .toUri();
 
         return ResponseEntity.created(uri).body(batchStockDTOS);
