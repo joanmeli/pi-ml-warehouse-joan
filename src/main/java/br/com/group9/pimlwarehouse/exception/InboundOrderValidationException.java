@@ -1,4 +1,4 @@
-package br.com.group9.pimlwarehouse.exceptions;
+package br.com.group9.pimlwarehouse.exception;
 
 public class InboundOrderValidationException extends RuntimeException{
     private static final long serialVersionUID = -1957137827452037216L;

@@ -8,7 +8,7 @@ import br.com.group9.pimlwarehouse.entity.SectionProduct;
 import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException;
 import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
 import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
-import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
+import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.SectionRepository;
 import org.springframework.stereotype.Service;
 

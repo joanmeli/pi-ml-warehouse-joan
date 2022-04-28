@@ -1,4 +1,4 @@
-package br.com.group9.pimlwarehouse.handler;
+package br.com.group9.pimlwarehouse.exception.handler;
 
 import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException;
 import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;

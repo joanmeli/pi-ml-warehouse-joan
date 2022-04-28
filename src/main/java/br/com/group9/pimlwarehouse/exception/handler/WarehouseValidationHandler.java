@@ -1,8 +1,5 @@
-package br.com.group9.pimlwarehouse.handler;
+package br.com.group9.pimlwarehouse.exception.handler;
 
-import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
-import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
-import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
 import br.com.group9.pimlwarehouse.exception.WarehouseNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
