@@ -1,9 +1,11 @@
 package br.com.group9.pimlwarehouse.service;
 
+import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.entity.SectionProduct;
+import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException;
 import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
 import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
 import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
@@ -64,11 +66,20 @@ public class SectionService {
         }
     }
 
+    public void validateProductToSectionAssociation(ProductDTO productDTO, Section section) {
+        if(productDTO.getMinimumTemperature() < section.getMinimalTemperature())
+            throw new ProductDoesNotMatchSectionException("EXCEEDING_SECTION_MINIMUM_TEMPERATURE");
+        if(productDTO.getMinimumTemperature() > section.getMaximalTemperature())
+            throw new ProductDoesNotMatchSectionException("INFERIOR_SECTION_MAXIMUM_TEMPERATURE");
+    }
+
     public Section associateProductToSectionByIds(Long sectionId, Long productId) {
         Section foundSection = this.sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
 
-        this.productAPIService.fetchProductById(productId);
+        ProductDTO foundProductDTO = this.productAPIService.fetchProductById(productId);
+
+        validateProductToSectionAssociation(foundProductDTO, foundSection);
 
         SectionProduct newSectionProduct = SectionProduct.builder()
                 .section(foundSection)
