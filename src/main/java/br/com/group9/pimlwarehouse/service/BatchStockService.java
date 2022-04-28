@@ -21,4 +21,8 @@ public class BatchStockService {
         );
 
     }
+
+    public List<BatchStock> findByProductId(Long productId){
+        return batchStockRepository.findByProductId(productId);
+    }
 }

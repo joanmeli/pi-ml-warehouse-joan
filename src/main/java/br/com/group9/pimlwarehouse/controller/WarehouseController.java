@@ -1,7 +1,6 @@
 package br.com.group9.pimlwarehouse.controller;
 
-import br.com.group9.pimlwarehouse.dto.SectionDTO;
-import br.com.group9.pimlwarehouse.dto.WarehouseDTO;
+import br.com.group9.pimlwarehouse.dto.*;
 import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
 import br.com.group9.pimlwarehouse.service.WarehouseService;
@@ -11,6 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 public class WarehouseController extends APIController{
@@ -37,5 +37,11 @@ public class WarehouseController extends APIController{
     public ResponseEntity<WarehouseDTO> findWarehouse(@PathVariable(name = "warehouseId") Long warehouseId) {
         Warehouse foundWarehouse = this.warehouseService.findById(warehouseId);
         return ResponseEntity.ok(WarehouseDTO.map(foundWarehouse));
+    }
+
+    @GetMapping("/fresh-products/warehouse/{productId}")
+    public ResponseEntity<ProductWarehouseDTO> findProductInWarehouse(@PathVariable Long productId) {
+        Map<Long, Integer> product = warehouseService.getAllWarehousesByProduct(productId);
+        return ResponseEntity.ok(ProductWarehouseDTO.convert(productId, WarehouseProductDTO.convert(product)));
     }
 }
