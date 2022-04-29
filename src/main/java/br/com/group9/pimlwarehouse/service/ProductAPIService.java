@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class ProductAPIService {
     private static final String PRODUCT_API_URI = "https://4bf27f8c-fe37-4752-b67f-a9aba01d33a4.mock.pstmn.io";
@@ -23,6 +26,17 @@ public class ProductAPIService {
         // TODO: 27/04/22 Create custom validations on Response for Product API.
         try {
             ResponseEntity<ProductDTO> result = restTemplate.getForEntity(resourceURI, ProductDTO.class);
+            return result.getBody();
+        } catch (RuntimeException ex) {
+            throw new ProductNotFoundException("PRODUCT_NOT_FOUND");
+        }
+    }
+
+    public ProductDTO fetchProductsById(Map<String, List<Long>> ids) {
+        String resourceURI = PRODUCT_API_URI.concat(PRODUCTS_RESOURCE).concat("/");
+        // TODO: 27/04/22 Create custom validations on Response for Product API.
+        try {
+            ResponseEntity<ProductDTO> result = restTemplate.getForEntity(resourceURI, ProductDTO.class );
             return result.getBody();
         } catch (RuntimeException ex) {
             throw new ProductNotFoundException("PRODUCT_NOT_FOUND");

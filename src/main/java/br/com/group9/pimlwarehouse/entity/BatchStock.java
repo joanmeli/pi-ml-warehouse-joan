@@ -1,5 +1,6 @@
 package br.com.group9.pimlwarehouse.entity;
 
+import br.com.group9.pimlwarehouse.enums.CategoryENUM;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,11 +22,13 @@ public class BatchStock {
     @ManyToOne()
     @JoinColumn(name="inboundOrder_id")
     private InboundOrder inboundOrder;
-    private Long productSize;
+    private Double productSize;
     private Long productId;
     private Integer batchNumber;
     private LocalDate dueDate;
     private LocalDateTime manufacturingDate;
     private Integer initialQuantity;
     private Integer currentQuantity;
+    @Enumerated(EnumType.STRING)
+    private CategoryENUM category;
 }

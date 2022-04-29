@@ -1,8 +1,11 @@
 package br.com.group9.pimlwarehouse.service;
 
+import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
+import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.entity.Section;
+import br.com.group9.pimlwarehouse.enums.CategoryENUM;
 import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
 import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
@@ -10,16 +13,28 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class BatchStockService {
     private BatchStockRepository batchStockRepository;
     private InboundOrderRepository inboundOrderRepository;
+    private SectionService sectionService;
+    private ProductAPIService productAPIService;
 
-    public BatchStockService(BatchStockRepository batchStockRepository, InboundOrderRepository inboundOrderRepository) {
+
+    public BatchStockService(
+            BatchStockRepository batchStockRepository,
+            InboundOrderRepository inboundOrderRepository,
+            SectionService sectionService,
+            ProductAPIService productAPIService
+
+    ) {
         this.batchStockRepository = batchStockRepository;
         this.inboundOrderRepository = inboundOrderRepository;
+        this.sectionService = sectionService;
+        this.productAPIService = productAPIService;
     }
 
     public List<BatchStock> save(List<BatchStock> batchStocks) {
@@ -59,6 +74,19 @@ public class BatchStockService {
         return updateBatchStocks(order.getBatchStocks(), batchStocks);
     }
 
+    public List<BatchStock> getAllBatchesByDueDate(Long sectionId, Long days, CategoryENUM category) {
+        if (sectionId == null){
+            List<BatchStock> batchStocks= getAllBatchesByDueDate(days);
+            return batchStocks.stream().filter(batchStock ->
+                    batchStock.getCategory().equals(category)
+            ).collect(Collectors.toList());
+        }
+
+        Section section = sectionService.findById(sectionId);
+
+        return getAllBatchesByDueDate(section,days);
+    }
+
     public List<BatchStock> getAllBatchesByDueDate(Section section, Long days) {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
@@ -70,4 +98,22 @@ public class BatchStockService {
             return b1.getDueDate().compareTo(b2.getDueDate());
         }).collect(Collectors.toList());
     }
+
+    public List<BatchStock> getAllBatchesByDueDate(Long days) {
+        LocalDate today = LocalDate.now();
+        LocalDate upperDate = today.plusDays(days);
+        List<BatchStock> batchStocks = batchStockRepository.findAll();
+        return batchStocks.stream().filter(batchStock ->
+                batchStock.getDueDate().isAfter(today) && batchStock.getDueDate().isBefore(upperDate)
+        ).sorted((b1, b2) -> {
+            return b1.getDueDate().compareTo(b2.getDueDate());
+        }).collect(Collectors.toList());
+    }
+
+    public List<Map<ProductDTO, BatchStockDTO>> getProductInfo(List<BatchStockDTO> batchStockList) {
+        return batchStockList.stream().map(batchStockDTO ->
+                        Map.of(productAPIService.fetchProductById(batchStockDTO.getProductId()), batchStockDTO)
+        ).collect(Collectors.toList());
+    }
 }
+

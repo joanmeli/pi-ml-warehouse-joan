@@ -2,6 +2,7 @@ package br.com.group9.pimlwarehouse.controller;
 
 import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
 import br.com.group9.pimlwarehouse.dto.InboundOrderDTO;
+import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.service.BatchStockService;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class InboundOrderController extends APIController{
@@ -34,15 +36,17 @@ public class InboundOrderController extends APIController{
             @RequestBody InboundOrderDTO order, UriComponentsBuilder uriBuilder
     ){
         inboundOrderService.validateExistence(order.getOrderNumber());
+        List<Map<ProductDTO, BatchStockDTO>> batchStocks = batchStockService.getProductInfo(order.getBatchStockList());
         // Salvando a ordem
         InboundOrder orderSaved = inboundOrderService.save(
-            order.convert(), BatchStockDTO.convert(order.getBatchStockList(), order.convert())
+            order.convert(),
+            BatchStockDTO.convert(batchStocks, order.convert())
         );
         // Salvando os lotes
-        List<BatchStock> batchStocks = batchStockService.save(
-                BatchStockDTO.convert(order.getBatchStockList(), orderSaved)
+        List<BatchStock> batchStocksSaved = batchStockService.save(
+                BatchStockDTO.convert(batchStocks, orderSaved)
         );
-        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(batchStocks);
+        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(batchStocksSaved);
         URI uri = uriBuilder
                 .path("/fresh-products/inboundorder")
                 .buildAndExpand(orderSaved.getId())
@@ -51,21 +55,21 @@ public class InboundOrderController extends APIController{
         return ResponseEntity.created(uri).body(batchStockDTOS);
     }
 
-    @PutMapping("/fresh-products/inboundorder")
-    public ResponseEntity<List<BatchStockDTO>> update(
-            @RequestBody  InboundOrderDTO order , UriComponentsBuilder uriBuilder
-    ){
-        InboundOrder orderToUpdate = inboundOrderService.get(order.getOrderNumber());
-        // Salvando os lotes
-        List<BatchStock> inboundOrderUpdated = batchStockService.update(
-                BatchStockDTO.convert(order.getBatchStockList(), orderToUpdate), orderToUpdate
-        );
-        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(inboundOrderUpdated);
-        URI uri = uriBuilder
-                .path("/fresh-products/inboundorder")
-                .buildAndExpand(orderToUpdate.getId())
-                .toUri();
-
-        return ResponseEntity.created(uri).body(batchStockDTOS);
-    }
+//    @PutMapping("/fresh-products/inboundorder")
+//    public ResponseEntity<List<BatchStockDTO>> update(
+//            @RequestBody  InboundOrderDTO order , UriComponentsBuilder uriBuilder
+//    ){
+//        InboundOrder orderToUpdate = inboundOrderService.get(order.getOrderNumber());
+//        // Salvando os lotes
+//        List<BatchStock> inboundOrderUpdated = batchStockService.update(
+//                BatchStockDTO.convert(order.getBatchStockList(), orderToUpdate), orderToUpdate
+//        );
+//        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(inboundOrderUpdated);
+//        URI uri = uriBuilder
+//                .path("/fresh-products/inboundorder")
+//                .buildAndExpand(orderToUpdate.getId())
+//                .toUri();
+//
+//        return ResponseEntity.created(uri).body(batchStockDTOS);
+//    }
 }

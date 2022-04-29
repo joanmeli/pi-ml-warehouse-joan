@@ -2,7 +2,7 @@ package br.com.group9.pimlwarehouse.controller;
 
 import br.com.group9.pimlwarehouse.dto.BatchStockByDuaDateDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
-import br.com.group9.pimlwarehouse.entity.Section;
+import br.com.group9.pimlwarehouse.enums.CategoryENUM;
 import br.com.group9.pimlwarehouse.service.BatchStockService;
 import br.com.group9.pimlwarehouse.service.SectionService;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +27,12 @@ public class BatchStockController  extends APIController{
 
     @GetMapping("/fresh-products/due-date")
     public ResponseEntity<List<BatchStockByDuaDateDTO>> findProductsByDueDate(
-            @RequestParam Long sectionId,
+            @RequestParam (required = false) Long sectionId,
             @RequestParam Long days,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String ordering
+            @RequestParam(required = false) CategoryENUM category
     ) {
-        Section section = sectionService.findById(sectionId);
-        List<BatchStock> product = batchStockService.getAllBatchesByDueDate(section, days);
+
+        List<BatchStock> product = batchStockService.getAllBatchesByDueDate(sectionId, days, category);
         return ResponseEntity.ok(BatchStockByDuaDateDTO.convert(product));
     }
 }
