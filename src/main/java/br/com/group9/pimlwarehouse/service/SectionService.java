@@ -86,7 +86,7 @@ public class SectionService {
                 .productId(productId)
                 .build();
         if(this.sectionProductService.exists(newSectionProduct))
-            throw new SectionProductNotFoundException("SECTION_PRODUCT_NOT_FOUND");
+            throw new SectionProductNotFoundException("SECTION_PRODUCT_ALREADY_ASSOCIATED");
         foundSection.addSectionProduct(newSectionProduct);
 
         return this.sectionRepository.save(foundSection);
