@@ -2,7 +2,7 @@ package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
-import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
+import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
 import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
 import org.springframework.stereotype.Service;
