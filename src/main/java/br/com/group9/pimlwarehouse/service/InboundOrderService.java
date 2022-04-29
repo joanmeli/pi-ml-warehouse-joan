@@ -7,6 +7,7 @@ import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InboundOrderService {
@@ -24,6 +25,12 @@ public class InboundOrderService {
         this.inboundOrderRepository = inboundOrderRepository;
     }
 
+
+    public InboundOrder get(Long id) {
+        Optional<InboundOrder> op = this.inboundOrderRepository.findById(id);
+        return op.orElse(null);
+    }
+
     public void validateInboundOrder(
             Long warehouseId, Long sectorId, List<BatchStock> batchStocks
     ) {
@@ -34,15 +41,21 @@ public class InboundOrderService {
         // validar o setor
         sectionService.validateBatchStocksBySection(sectorId, batchStocks);
 
-
     }
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
+
         // Validar ordem de entrada
         validateInboundOrder(
                 order.getSection().getWarehouse().getId(), order.getSection().getId(),
                 batchStocks
         );
         return inboundOrderRepository.save(order);
+    }
+
+    public void validateExistence(Long id) {
+        if(get(id) != null) {
+            throw new InboundOrderValidationException("INBOUND_ORDER_ALREADY_EXISTS");
+        }
     }
 }
