@@ -4,6 +4,7 @@ import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
 import br.com.group9.pimlwarehouse.exception.WarehouseNotFoundException;
 import br.com.group9.pimlwarehouse.repository.WarehouseRepository;
+import br.com.group9.pimlwarehouse.util.batch_stock_order.OrderBatchStockEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,9 +57,10 @@ public class WarehouseService {
      * @return Returns a Map<Long, List<BatchStock>> where the Long value is the productId and the List is the
      * BatchStock that contains the given productId.
      */
-    public Map<Long, List<BatchStock>> getProductsInStockByIds(List<Long> productsId) {
+    public Map<Long, List<BatchStock>> getProductsInStockByIds(List<Long> productsId, OrderBatchStockEnum orderBy) {
         Map<Long, List<BatchStock>> productsMap = productsId.stream()
-                .map(p -> Map.entry(p, batchStockService.findByProductId(p)))
+                .map(p ->
+                    Map.entry(p, orderBy.getOrderByStrategy().apply(batchStockService.findByProductId(p))))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return productsMap;
     }

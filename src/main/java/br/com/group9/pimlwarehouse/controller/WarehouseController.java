@@ -5,14 +5,13 @@ import br.com.group9.pimlwarehouse.dto.WarehouseDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
 import br.com.group9.pimlwarehouse.service.WarehouseService;
-import br.com.group9.pimlwarehouse.util.BatchStockOrderBy;
+import br.com.group9.pimlwarehouse.util.batch_stock_order.OrderBatchStockEnum;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.List;
 
@@ -52,9 +51,9 @@ public class WarehouseController extends APIController{
     @GetMapping("/fresh-products/list")
     public ResponseEntity<List<SectionBatchStockDTO>> findProductsInStock(
             @RequestParam(name = "products", required = false, defaultValue = "") List<Long> productIds,
-            @RequestParam(name = "order_by", required = false) BatchStockOrderBy orderBy
+            @RequestParam(name = "order_by", required = false, defaultValue = "DEFAULT") OrderBatchStockEnum orderBy
     ) {
-        Map<Long, List<BatchStock>> foundBatchStocks = this.warehouseService.getProductsInStockByIds(productIds);
+        Map<Long, List<BatchStock>> foundBatchStocks = this.warehouseService.getProductsInStockByIds(productIds, orderBy);
         return ResponseEntity.ok(SectionBatchStockDTO.map(foundBatchStocks));
     }
 }
