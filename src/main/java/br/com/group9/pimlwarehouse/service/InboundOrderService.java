@@ -44,11 +44,18 @@ public class InboundOrderService {
     }
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
+
         // Validar ordem de entrada
         validateInboundOrder(
                 order.getSection().getWarehouse().getId(), order.getSection().getId(),
                 batchStocks
         );
         return inboundOrderRepository.save(order);
+    }
+
+    public void validateExistence(Long id) {
+        if(get(id) != null) {
+            throw new InboundOrderValidationException("INBOUND_ORDER_ALREADY_EXISTS");
+        }
     }
 }

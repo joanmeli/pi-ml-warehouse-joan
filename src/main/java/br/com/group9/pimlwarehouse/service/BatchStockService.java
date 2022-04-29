@@ -48,7 +48,7 @@ public class BatchStockService {
             throw new InboundOrderValidationException("INBOUND_ORDER_NOT_FOUND");
         }
         if (order.getBatchStocks().size() != batchStocks.size()){
-            throw new InboundOrderValidationException("INBOUNDORDER_MISSING");
+            throw new InboundOrderValidationException("INBOUND_ORDER_MISSING");
         }
         return updateBatchStocks(order.getBatchStocks(), batchStocks);
 

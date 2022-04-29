@@ -33,7 +33,7 @@ public class InboundOrderController extends APIController{
     public ResponseEntity<List<BatchStockDTO>> createInboundOrder(
             @RequestBody InboundOrderDTO order, UriComponentsBuilder uriBuilder
     ){
-
+        inboundOrderService.validateExistence(order.getOrderNumber());
         // Salvando a ordem
         InboundOrder orderSaved = inboundOrderService.save(
             order.convert(), BatchStockDTO.convert(order.getBatchStockList(), order.convert())
