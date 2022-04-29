@@ -1,21 +1,29 @@
 package br.com.group9.pimlwarehouse.service;
 
+import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
 import br.com.group9.pimlwarehouse.exception.WarehouseNotFoundException;
 import br.com.group9.pimlwarehouse.repository.WarehouseRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WarehouseService {
     private WarehouseRepository warehouseRepository;
 
-    public WarehouseService(WarehouseRepository warehouseRepository) {
+    private BatchStockService batchStockService;
+
+    public WarehouseService(WarehouseRepository warehouseRepository, BatchStockService batchStockService) {
         this.warehouseRepository = warehouseRepository;
+        this.batchStockService = batchStockService;
     }
 
     public Warehouse createWarehouse(Warehouse warehouse) {
+        warehouse.getSections().forEach(s -> s.setWarehouse(warehouse));
         return warehouseRepository.save(warehouse);
     }
 
@@ -28,4 +36,18 @@ public class WarehouseService {
         return this.warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException("WAREHOUSE_NOT_FOUND"));
     }
+
+    public Map<Long, Integer> getAllWarehousesByProduct(Long productId) {
+
+        List<BatchStock> batchStocks = batchStockService.findByProductId(productId);
+
+        Map<Long, Integer> warehouses = batchStocks
+                .stream()
+                .collect(Collectors.toMap(k -> k.getInboundOrder().getSection().getWarehouse().getId(),
+                        BatchStock::getCurrentQuantity,
+                        (a, b) -> a + b ));
+        return warehouses;
+
+    }
+
 }

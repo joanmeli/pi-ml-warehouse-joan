@@ -26,7 +26,11 @@ public class BatchStockService {
         );
 
     }
-
+  
+    public List<BatchStock> findByProductId(Long productId){
+        return batchStockRepository.findByProductId(productId);
+    }
+  
     private BatchStock updateBatchStockId(BatchStock newBatchStock, BatchStock oldBatchStock){
         newBatchStock.setId(oldBatchStock.getId());
         return newBatchStock;
@@ -51,7 +55,5 @@ public class BatchStockService {
             throw new InboundOrderValidationException("INBOUND_ORDER_MISSING");
         }
         return updateBatchStocks(order.getBatchStocks(), batchStocks);
-
-
     }
 }
