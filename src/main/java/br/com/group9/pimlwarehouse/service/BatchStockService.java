@@ -2,11 +2,12 @@ package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
-import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
+import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
 import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,12 @@ public class BatchStockService {
   
     public List<BatchStock> findByProductId(Long productId){
         return batchStockRepository.findByProductId(productId);
+    }
+
+    public List<BatchStock> findByProductIdWithValidShelfLife(Long productId){
+        LocalDate maxDueDate = LocalDate.now().minusDays(21);
+        List<BatchStock> byProductIdAndDueDateIsBefore = batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
+        return byProductIdAndDueDateIsBefore;
     }
   
     private BatchStock updateBatchStockId(BatchStock newBatchStock, BatchStock oldBatchStock){
