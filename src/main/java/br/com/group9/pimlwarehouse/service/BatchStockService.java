@@ -2,11 +2,13 @@ package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
-import br.com.group9.pimlwarehouse.exceptions.InboundOrderValidationException;
+import br.com.group9.pimlwarehouse.entity.Section;
+import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
 import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,5 +57,17 @@ public class BatchStockService {
             throw new InboundOrderValidationException("INBOUND_ORDER_MISSING");
         }
         return updateBatchStocks(order.getBatchStocks(), batchStocks);
+    }
+
+    public List<BatchStock> getAllBatchesByDueDate(Section section, Long days) {
+        LocalDate today = LocalDate.now();
+        LocalDate upperDate = today.plusDays(days);
+        return section.getInboundOrders().stream().map(
+                i -> i.getBatchStocks().stream().filter(batchStock ->
+                        batchStock.getDueDate().isAfter(today) && batchStock.getDueDate().isBefore(upperDate)
+                ).collect(Collectors.toList())
+        ).flatMap(List::stream).sorted((b1, b2) -> {
+            return b1.getDueDate().compareTo(b2.getDueDate());
+        }).collect(Collectors.toList());
     }
 }
