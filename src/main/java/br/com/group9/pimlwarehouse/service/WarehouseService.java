@@ -60,7 +60,7 @@ public class WarehouseService {
     public Map<Long, List<BatchStock>> getProductsInStockByIds(List<Long> productsId, OrderBatchStockEnum orderBy) {
         Map<Long, List<BatchStock>> productsMap = productsId.stream()
                 .map(p ->
-                    Map.entry(p, orderBy.getOrderByStrategy().apply(batchStockService.findByProductId(p))))
+                    Map.entry(p, orderBy.getOrderByStrategy().apply(batchStockService.findByProductIdWithValidShelfLife(p))))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return productsMap;
     }
