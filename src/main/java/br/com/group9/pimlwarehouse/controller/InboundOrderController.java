@@ -55,21 +55,22 @@ public class InboundOrderController extends APIController{
         return ResponseEntity.created(uri).body(batchStockDTOS);
     }
 
-//    @PutMapping("/fresh-products/inboundorder")
-//    public ResponseEntity<List<BatchStockDTO>> update(
-//            @RequestBody  InboundOrderDTO order , UriComponentsBuilder uriBuilder
-//    ){
-//        InboundOrder orderToUpdate = inboundOrderService.get(order.getOrderNumber());
-//        // Salvando os lotes
-//        List<BatchStock> inboundOrderUpdated = batchStockService.update(
-//                BatchStockDTO.convert(order.getBatchStockList(), orderToUpdate), orderToUpdate
-//        );
-//        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(inboundOrderUpdated);
-//        URI uri = uriBuilder
-//                .path("/fresh-products/inboundorder")
-//                .buildAndExpand(orderToUpdate.getId())
-//                .toUri();
-//
-//        return ResponseEntity.created(uri).body(batchStockDTOS);
-//    }
+    @PutMapping("/fresh-products/inboundorder")
+    public ResponseEntity<List<BatchStockDTO>> update(
+            @RequestBody  InboundOrderDTO order , UriComponentsBuilder uriBuilder
+    ){
+        InboundOrder orderToUpdate = inboundOrderService.get(order.getOrderNumber());
+        List<Map<ProductDTO, BatchStockDTO>> batchStocks = batchStockService.getProductInfo(order.getBatchStockList());
+        // Salvando os lotes
+        List<BatchStock> inboundOrderUpdated = batchStockService.update(
+                BatchStockDTO.convert(batchStocks, orderToUpdate), orderToUpdate
+        );
+        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(inboundOrderUpdated);
+        URI uri = uriBuilder
+                .path("/fresh-products/inboundorder")
+                .buildAndExpand(orderToUpdate.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(batchStockDTOS);
+    }
 }

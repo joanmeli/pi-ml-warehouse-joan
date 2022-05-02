@@ -48,16 +48,16 @@ public class BatchStockService {
         return batchStockRepository.findByProductId(productId);
     }
   
-    private BatchStock updateBatchStockId(BatchStock newBatchStock, BatchStock oldBatchStock){
-        newBatchStock.setId(oldBatchStock.getId());
+    private BatchStock updateBatchStock(BatchStock newBatchStock, BatchStock oldBatchStock){
+        oldBatchStock.setInitialQuantity(newBatchStock.getInitialQuantity());
         return newBatchStock;
     }
 
     private List<BatchStock> updateBatchStocks(List<BatchStock> batchStocks, List<BatchStock> newBatchStocks){
         List<BatchStock> toSaveBatchStocks =  batchStocks.stream().map(batchStock ->
-                updateBatchStockId(newBatchStocks.stream()
+                updateBatchStock(newBatchStocks.stream()
                     .filter(nb -> batchStock.getBatchNumber().equals(nb.getBatchNumber()))
-                    .findAny().get(), batchStock)
+                    .findAny().orElseThrow(() -> new InboundOrderValidationException("BATCH_STOCK_NOT_FOUND")), batchStock)
 
         ).collect(Collectors.toList());
         return  save(toSaveBatchStocks);
@@ -69,7 +69,7 @@ public class BatchStockService {
             throw new InboundOrderValidationException("INBOUND_ORDER_NOT_FOUND");
         }
         if (order.getBatchStocks().size() != batchStocks.size()){
-            throw new InboundOrderValidationException("INBOUND_ORDER_MISSING");
+            throw new InboundOrderValidationException("BATCH_STOCK_MISSING");
         }
         return updateBatchStocks(order.getBatchStocks(), batchStocks);
     }
