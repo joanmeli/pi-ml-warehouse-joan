@@ -4,6 +4,7 @@ import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException
 import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
 import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
 import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,7 +15,7 @@ public class SectionValidationHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     protected ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException exception) {
         String bodyOfResponse = exception.getMessage();
-        return ResponseEntity.badRequest().body(bodyOfResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bodyOfResponse);
     }
     @ExceptionHandler(SectionNotFoundException.class)
     protected ResponseEntity<Object> handleSectionNotFoundException(SectionNotFoundException exception) {
