@@ -22,12 +22,7 @@ public class ProductAPIService {
 
     public ProductDTO fetchProductById(Long id) {
         String resourceURI = PRODUCT_API_URI.concat(PRODUCTS_RESOURCE).concat("/").concat(id.toString());
-        // TODO: 27/04/22 Create custom validations on Response for Product API.
-        try {
-            ResponseEntity<ProductDTO> result = restTemplate.getForEntity(resourceURI, ProductDTO.class);
-            return result.getBody();
-        } catch (RuntimeException ex) {
-            throw new ProductNotFoundException("PRODUCT_NOT_FOUND");
-        }
+        ResponseEntity<ProductDTO> result = restTemplate.getForEntity(resourceURI, ProductDTO.class);
+        return result.getBody();
     }
 }
