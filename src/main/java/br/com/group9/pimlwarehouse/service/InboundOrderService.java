@@ -1,5 +1,7 @@
 package br.com.group9.pimlwarehouse.service;
 
+import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
+import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
@@ -7,6 +9,7 @@ import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -14,14 +17,16 @@ public class InboundOrderService {
 
     private WarehouseService warehouseService;
     private SectionService sectionService;
+    private BatchStockService batchStockService;
     private InboundOrderRepository inboundOrderRepository;
 
     public InboundOrderService(
-            WarehouseService warehouseService, SectionService sectionService,
+            WarehouseService warehouseService, SectionService sectionService, BatchStockService batchStockService,
             InboundOrderRepository inboundOrderRepository
     ) {
         this.warehouseService = warehouseService;
         this.sectionService  = sectionService;
+        this.batchStockService = batchStockService;
         this.inboundOrderRepository = inboundOrderRepository;
     }
 
@@ -32,8 +37,10 @@ public class InboundOrderService {
     }
 
     public void validateInboundOrder(
-            Long warehouseId, Long sectorId, List<BatchStock> batchStocks
+            Long warehouseId, Long sectorId, Long orderId, List<BatchStock> batchStocks
     ) {
+        validateExistence(orderId);
+
         // Verifica se armazem existe
         if (!warehouseService.exists(warehouseId)){
             throw new InboundOrderValidationException("WAREHOUSE_NOT_FOUND");
@@ -44,13 +51,16 @@ public class InboundOrderService {
     }
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
-
         // Validar ordem de entrada
         validateInboundOrder(
-                order.getSection().getWarehouse().getId(), order.getSection().getId(),
+                order.getSection().getWarehouse().getId(), order.getSection().getId(), order.getId(),
                 batchStocks
         );
-        return inboundOrderRepository.save(order);
+        InboundOrder orderSaved = inboundOrderRepository.save(order);
+        List<BatchStock> batchStocksSaved = batchStockService.save(
+                batchStocks
+        );
+        return orderSaved;
     }
 
     public void validateExistence(Long id) {
