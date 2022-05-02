@@ -19,6 +19,11 @@ public class AgentController extends APIController {
         this.authenticationAPIService = authenticationAPIService;
     }
 
+    /**
+     * POST method to create agent
+     * @param agentDTO returns the registered data of the agent
+     * @return returns agent payload created and status "201-Created"
+     */
     @PostMapping(BASE_PATH)
     public ResponseEntity<AgentDTO> createAgent(@Valid @RequestBody AgentDTO agentDTO) {
         AgentDTO agent = this.authenticationAPIService.createAgent(agentDTO);

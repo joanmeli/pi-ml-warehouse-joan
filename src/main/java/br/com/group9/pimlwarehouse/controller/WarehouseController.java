@@ -27,7 +27,7 @@ public class WarehouseController extends APIController{
     /**
      * POST method for create a new Warehouse
      * @param warehouseDTO receives a valid WarehouseDTO in body of the requisition
-     * @param uriBuilder injeção utilizada pelo spring para declarar para o spring enviar o location
+     * @param uriBuilder Injection used by Spring to send the location
      * @return the URI of warehouse on header location, the entity response with status code "201-Created" and
      * the WarehouseDTO created as result
      */
