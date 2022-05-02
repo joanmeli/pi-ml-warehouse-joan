@@ -6,6 +6,7 @@ import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.enums.CategoryENUM;
+
 import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,12 @@ public class BatchStockService {
   
     public List<BatchStock> findByProductId(Long productId){
         return batchStockRepository.findByProductId(productId);
+    }
+
+    public List<BatchStock> findByProductIdWithValidShelfLife(Long productId){
+        LocalDate maxDueDate = LocalDate.now().minusDays(21);
+        List<BatchStock> byProductIdAndDueDateIsBefore = batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
+        return byProductIdAndDueDateIsBefore;
     }
   
     private BatchStock updateBatchStock(BatchStock newBatchStock, BatchStock oldBatchStock){
