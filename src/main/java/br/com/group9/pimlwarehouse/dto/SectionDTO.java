@@ -24,7 +24,7 @@ public class SectionDTO {
     @NotNull(message = "Informar a capacidade de armazenamento do Setor.")
     private Integer size;
 
-    private List<SectionProductDTO> products;
+    private List<SectionProductDTO> allowedProducts;
 
     public Section map() {
         return Section.builder()
@@ -52,7 +52,7 @@ public class SectionDTO {
                 .minimalTemperature(section.getMinimalTemperature())
                 .maximalTemperature(section.getMaximalTemperature())
                 .size(section.getSize())
-                .products(sectionProductDTOS)
+                .allowedProducts(sectionProductDTOS)
                 .build();
     }
 }
