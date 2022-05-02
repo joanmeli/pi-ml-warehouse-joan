@@ -7,6 +7,7 @@ import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.service.BatchStockService;
 import br.com.group9.pimlwarehouse.service.InboundOrderService;
+import br.com.group9.pimlwarehouse.service.ProductAPIService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,21 +23,24 @@ import java.util.Map;
 public class InboundOrderController extends APIController{
     private InboundOrderService inboundOrderService;
     private BatchStockService batchStockService;
+    private ProductAPIService productAPIService;
 
     public InboundOrderController(
             InboundOrderService inboundOrderService,
-            BatchStockService batchStockService
+            BatchStockService batchStockService,
+            ProductAPIService productAPIService
     ) {
         this.inboundOrderService = inboundOrderService;
         this.batchStockService = batchStockService;
+        this.productAPIService = productAPIService;
     }
 
     @PostMapping("/fresh-products/inboundorder")
     public ResponseEntity<List<BatchStockDTO>> createInboundOrder(
             @RequestBody InboundOrderDTO order, UriComponentsBuilder uriBuilder
     ){
-        inboundOrderService.validateExistence(order.getOrderNumber());
-        List<Map<ProductDTO, BatchStockDTO>> batchStocks = batchStockService.getProductInfo(order.getBatchStockList());
+
+        List<Map<ProductDTO, BatchStockDTO>> batchStocks = productAPIService.getProductInfo(order.getBatchStockList());
         // Salvando a ordem
         InboundOrder orderSaved = inboundOrderService.save(
             order.convert(),
@@ -56,7 +60,7 @@ public class InboundOrderController extends APIController{
             @RequestBody  InboundOrderDTO order , UriComponentsBuilder uriBuilder
     ){
         InboundOrder orderToUpdate = inboundOrderService.get(order.getOrderNumber());
-        List<Map<ProductDTO, BatchStockDTO>> batchStocks = batchStockService.getProductInfo(order.getBatchStockList());
+        List<Map<ProductDTO, BatchStockDTO>> batchStocks = productAPIService.getProductInfo(order.getBatchStockList());
         // Salvando os lotes
         List<BatchStock> inboundOrderUpdated = batchStockService.update(
                 BatchStockDTO.convert(batchStocks, orderToUpdate), orderToUpdate

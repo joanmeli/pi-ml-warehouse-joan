@@ -1,5 +1,6 @@
 package br.com.group9.pimlwarehouse.service;
 
+import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
 import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -9,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductAPIService {
@@ -41,5 +43,11 @@ public class ProductAPIService {
         } catch (RuntimeException ex) {
             throw new ProductNotFoundException("PRODUCT_NOT_FOUND");
         }
+    }
+
+    public List<Map<ProductDTO, BatchStockDTO>> getProductInfo(List<BatchStockDTO> batchStockList) {
+        return batchStockList.stream().map(batchStockDTO ->
+                Map.of(fetchProductById(batchStockDTO.getProductId()), batchStockDTO)
+        ).collect(Collectors.toList());
     }
 }

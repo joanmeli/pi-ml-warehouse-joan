@@ -101,10 +101,6 @@ public class BatchStockService {
         ).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
-    public List<Map<ProductDTO, BatchStockDTO>> getProductInfo(List<BatchStockDTO> batchStockList) {
-        return batchStockList.stream().map(batchStockDTO ->
-                        Map.of(productAPIService.fetchProductById(batchStockDTO.getProductId()), batchStockDTO)
-        ).collect(Collectors.toList());
-    }
+
 }
 
