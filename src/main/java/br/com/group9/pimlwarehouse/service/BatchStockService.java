@@ -1,7 +1,5 @@
 package br.com.group9.pimlwarehouse.service;
 
-import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
-import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.entity.Section;
@@ -14,25 +12,21 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class BatchStockService {
     private BatchStockRepository batchStockRepository;
     private SectionService sectionService;
-    private ProductAPIService productAPIService;
 
 
     public BatchStockService(
             BatchStockRepository batchStockRepository,
-            SectionService sectionService,
-            ProductAPIService productAPIService
+            SectionService sectionService
 
     ) {
         this.batchStockRepository = batchStockRepository;
         this.sectionService = sectionService;
-        this.productAPIService = productAPIService;
     }
 
     public List<BatchStock> save(List<BatchStock> batchStocks) {
@@ -103,9 +97,9 @@ public class BatchStockService {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
         List<BatchStock> batchStocks = batchStockRepository.findAll();
-        return batchStocks.stream().filter(batchStock ->
-                batchStock.getDueDate().isAfter(today) && batchStock.getDueDate().isBefore(upperDate)
-        ).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
+        return batchStocks.stream().map(batchStock ->
+                batchStockRepository.findByDueDateBetween(today,upperDate)
+        ).flatMap(List::stream).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
 
