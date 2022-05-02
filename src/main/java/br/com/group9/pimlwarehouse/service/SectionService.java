@@ -35,18 +35,18 @@ public class SectionService {
         return get(id).orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
     }
 
-    private Long getTotalBatchSize(List<BatchStock> batchStocks){
+    private Double getTotalBatchSize(List<BatchStock> batchStocks){
         return batchStocks.stream().map(
                 e -> e.getProductSize() * e.getCurrentQuantity()
-        ).mapToLong(Long::longValue).sum();
+        ).mapToDouble(Double::doubleValue).sum();
     }
 
 
-    public Long getAvailableSpace(Section section){
+    public Double getAvailableSpace(Section section){
         List<InboundOrder> inboundOrders = section.getInboundOrders();
-        Long occupiedSpace = inboundOrders.stream().map(
+        Double occupiedSpace = inboundOrders.stream().map(
                 order -> getTotalBatchSize(order.getBatchStocks())
-        ).mapToLong(Long::longValue).sum();
+        ).mapToDouble(Double::doubleValue).sum();
 
         return section.getSize()-occupiedSpace;
 
@@ -59,8 +59,8 @@ public class SectionService {
         }
 
         Section section = sectionOptional.get();
-        Long availableSpace = getAvailableSpace(section);
-        long requiredSpace = getTotalBatchSize(batchStocks);
+        Double availableSpace = getAvailableSpace(section);
+        Double requiredSpace = getTotalBatchSize(batchStocks);
         if (requiredSpace > availableSpace){
             throw new InboundOrderValidationException("SECTION_SPACE_NOT_ENOUGH");
         }

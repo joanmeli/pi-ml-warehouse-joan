@@ -8,6 +8,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -25,22 +26,27 @@ public class BatchStockDTO {
     private Integer initialQuantity;
     private Integer currentQuantity;
 
-    private BatchStock convert(InboundOrder order){
+    private BatchStock convert(InboundOrder order, ProductDTO productDTO){
 
         return BatchStock.builder()
                 .inboundOrder(order)
-                .productSize(10L) // TODO: add the real size of the product here
+                .productSize(productDTO.getSize())
                 .productId(this.productId)
                 .batchNumber(this.batchNumber)
                 .dueDate(this.dueDate)
                 .manufacturingDate(this.manufacturingDateTime)
                 .initialQuantity(this.initialQuantity)
                 .currentQuantity(this.currentQuantity)
+                .category(productDTO.getCategory())
                 .build();
     }
 
-    public static List<BatchStock> convert(List<BatchStockDTO> batchStockDTOS, InboundOrder order){
-        return batchStockDTOS.stream().map(e -> e.convert(order)).collect(Collectors.toList());
+    public static List<BatchStock> convert(List<Map<ProductDTO, BatchStockDTO>> batchStockDTOS, InboundOrder order){
+        return batchStockDTOS.stream().map(
+                e -> e.entrySet().stream().map(
+                        a -> a.getValue().convert(order, a.getKey())
+                ).collect(Collectors.toList())
+        ).flatMap(List::stream).collect(Collectors.toList());
     }
     private static BatchStockDTO convert(BatchStock batchStock){
 
