@@ -28,4 +28,8 @@ public class BatchStock {
     private LocalDateTime manufacturingDate;
     private Integer initialQuantity;
     private Integer currentQuantity;
+
+    public void withdrawQuantity(Integer quantity){
+        this.currentQuantity -= quantity;
+    }
 }

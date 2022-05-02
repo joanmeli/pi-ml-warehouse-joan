@@ -4,6 +4,7 @@ import br.com.group9.pimlwarehouse.dto.*;
 import br.com.group9.pimlwarehouse.dto.WarehouseDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
+import br.com.group9.pimlwarehouse.service.BatchStockService;
 import br.com.group9.pimlwarehouse.service.WarehouseService;
 import br.com.group9.pimlwarehouse.util.batch_stock_order.OrderBatchStockEnum;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,11 @@ import java.util.List;
 public class WarehouseController extends APIController{
     private static final String BASE_PATH = "/warehouse";
     private WarehouseService warehouseService;
+    private BatchStockService batchStockService;
 
-    public WarehouseController(WarehouseService warehouseService) {
+    public WarehouseController(WarehouseService warehouseService, BatchStockService batchStockService) {
         this.warehouseService = warehouseService;
+        this.batchStockService = batchStockService;
     }
 
     @PostMapping(BASE_PATH)
@@ -55,5 +58,11 @@ public class WarehouseController extends APIController{
     ) {
         Map<Long, List<BatchStock>> foundBatchStocks = this.warehouseService.getProductsInStockByIds(productIds, orderBy);
         return ResponseEntity.ok(SectionBatchStockDTO.map(foundBatchStocks));
+    }
+
+    @PostMapping("/fresh-products/")
+    public ResponseEntity<List<BatchStockDTO>> withdrawStock(@RequestBody List<ProductBatchStockDTO> products) {
+        List<BatchStock> batchStocks = this.batchStockService.withdrawStockByProductId(ProductBatchStockDTO.convert(products));
+        return ResponseEntity.ok(BatchStockDTO.convert(batchStocks));
     }
 }
