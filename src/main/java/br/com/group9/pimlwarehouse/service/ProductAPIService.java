@@ -2,6 +2,7 @@ package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
+import br.com.group9.pimlwarehouse.service.handler.ProductAPIErrorHandler;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class ProductAPIService {
 
     public ProductAPIService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder
+                .errorHandler(new ProductAPIErrorHandler())
                 .build();
     }
 
