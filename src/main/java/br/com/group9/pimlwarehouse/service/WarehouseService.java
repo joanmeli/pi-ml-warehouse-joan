@@ -53,6 +53,11 @@ public class WarehouseService {
                 .orElseThrow(() -> new WarehouseNotFoundException("WAREHOUSE_NOT_FOUND"));
     }
 
+    /**
+     * Search a product in all warehouses by Id.
+     * @param productId Receives a Long where is a productId to be searched.
+     * @return all warehouses where contains the product.
+     */
     public Map<Long, Integer> getAllWarehousesByProduct(Long productId) {
 
         List<BatchStock> batchStocks = batchStockService.findByProductId(productId);

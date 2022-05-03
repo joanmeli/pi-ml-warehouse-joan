@@ -112,6 +112,13 @@ public class BatchStockService {
         return updateBatchStocks(order.getBatchStocks(), batchStocks);
     }
 
+    /**
+     * Search within the batch stock for the products that will expire in a range of days.
+     * @param sectionId receive the section Id of batches.
+     * @param days receive amount of days.
+     * @param category receive the category to validate with batch stock
+     * @return return batch stock where category equals batch stock category, if not, return getAllBatchesByDueDate(section,days).
+     */
     public List<BatchStock> getAllBatchesByDueDate(Long sectionId, Long days, CategoryENUM category) {
         if (sectionId == null){
             List<BatchStock> batchStocks= getAllBatchesByDueDate(days);
@@ -125,6 +132,12 @@ public class BatchStockService {
         return getAllBatchesByDueDate(section,days);
     }
 
+    /**
+     * Search within the batch stock for the products that will expire in a range of days.
+     * @param section receive the section of batches.
+     * @param days receive amount of days.
+     * @return returns the batches between the informed days and inbound order.
+     */
     public List<BatchStock> getAllBatchesByDueDate(Section section, Long days) {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
@@ -133,6 +146,11 @@ public class BatchStockService {
         ).flatMap(List::stream).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
+    /**
+     * Search within the batch stock for the products that will expire in a range of days.
+     * @param days receives amount of days.
+     * @return returns the batches between the informed days.
+     */
     public List<BatchStock> getAllBatchesByDueDate(Long days) {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
@@ -142,6 +160,12 @@ public class BatchStockService {
         ).flatMap(List::stream).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
+
+    /**
+     * Validate stock quantity, if checkout quantity is greater than quantity in stock, returns "STOCK_QUANTITY_NOT_ENOUGH".
+     * @param batchStocks receives a batch stock list.
+     * @param checkoutQuantity receives the quantity of the product to validate.
+     */
     private void validateStockQuantity(List<BatchStock> batchStocks, Integer checkoutQuantity) {
         Integer quantityInStock = batchStocks.stream().map(b -> b.getCurrentQuantity()).reduce(0, Integer::sum);
         if(quantityInStock < checkoutQuantity)
@@ -175,6 +199,7 @@ public class BatchStockService {
      * @param quantityByProductMap receives a Map<Long, Integer> where sends quantities and IDs of products.
      * @return the quantity update stock of products by ID.
      */
+
 
     public List<BatchStock> withdrawStockByProductId(Map<Long, Integer> quantityByProductMap) {
         Map<Long, List<BatchStock>> stockByProductMap = quantityByProductMap.entrySet()

@@ -49,6 +49,11 @@ public class ProductAPIService {
         }
     }
 
+    /**
+     * Search in Product API information about a products inside a list of batch stock.
+     * @param batchStockList receives a List<BatchStockDTO>.
+     * @return returns a list of products from Product API.
+     */
     public List<Map<ProductDTO, BatchStockDTO>> getProductInfo(List<BatchStockDTO> batchStockList) {
         return batchStockList.stream().map(batchStockDTO ->
                 Map.of(fetchProductById(batchStockDTO.getProductId()), batchStockDTO)
