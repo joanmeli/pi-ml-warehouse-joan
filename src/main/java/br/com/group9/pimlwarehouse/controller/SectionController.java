@@ -24,11 +24,11 @@ public class SectionController extends APIController{
     }
 
     /**
-     * POST method to associate a product to a section
-     * @param sectionId get section Id
-     * @param sectionProductDTO associate the product with a section according to its Id
-     * @param uriBuilder Injection used by Spring to send the location
-     * @return URI of InboundOrder on header location, the entity response with status code "201-Created" and associate the product with a section
+     * POST method to associate a product to a section.
+     * @param sectionId get section Id.
+     * @param sectionProductDTO associate the product with a section according to its Id.
+     * @param uriBuilder Injection used by Spring to send the location.
+     * @return URI of InboundOrder on header location, the entity response with status code "201-Created" and associate the product with a section.
      */
     @PostMapping(BASE_PATH + "/{sectionId}/product")
     public ResponseEntity<SectionDTO> associateProductToSection(

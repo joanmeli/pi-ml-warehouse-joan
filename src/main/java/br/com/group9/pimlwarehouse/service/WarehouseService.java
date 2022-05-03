@@ -23,16 +23,31 @@ public class WarehouseService {
         this.batchStockService = batchStockService;
     }
 
+    /**
+     * Create Warehouse.
+     * @param warehouse receive a mapped warehouse.
+     * @return warehouse created and saved in repository.
+     */
     public Warehouse createWarehouse(Warehouse warehouse) {
         warehouse.getSections().forEach(s -> s.setWarehouse(warehouse));
         return warehouseRepository.save(warehouse);
     }
 
+    /**
+     * Verify if warehouse exists.
+     * @param id receives a Long Id to verify if exists.
+     * @return true or false if the warehouse exists or not with the informed warehouse Id.
+     */
     public boolean exists(Long id) {
         Optional<Warehouse> op = this.warehouseRepository.findById(id);
         return op.isPresent();
     }
 
+    /**
+     * Search warehouse by id.
+     * @param warehouseId receives a warehouse Id to make the search.
+     * @return returns the warehouse with the corresponding Id, if not, returns WarehouseNotFoundException.
+     */
     public Warehouse findById(Long warehouseId) {
         return this.warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException("WAREHOUSE_NOT_FOUND"));

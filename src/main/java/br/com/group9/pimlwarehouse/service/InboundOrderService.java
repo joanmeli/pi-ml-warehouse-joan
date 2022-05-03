@@ -26,9 +26,10 @@ public class InboundOrderService {
     }
 
     /**
-     * @param id receives a order number
-     * @return the result of search in database if exists,
-     * if not, it will return null
+     * Search an inbound order by Id.
+     * @param id receives an order number.
+     * @return the result of search in database if exists.
+     * If not, it will return null.
      */
     public InboundOrder get(Long id) {
         Optional<InboundOrder> op = this.inboundOrderRepository.findById(id);
@@ -36,9 +37,10 @@ public class InboundOrderService {
     }
 
     /**
-     * @param warehouseId receives a warehouseId of inboundOrder
-     * @param sectorId receives a sectorId of inboundOrder
-     * @param batchStocks receives a Batch stock list
+     * Validate if inbound order and section exists.
+     * @param warehouseId receives a warehouseId of inboundOrder.
+     * @param sectorId receives a sectorId of inboundOrder.
+     * @param batchStocks receives a Batch stock list.
      */
 
     public void validateInboundOrder(
@@ -54,9 +56,10 @@ public class InboundOrderService {
     }
 
     /**
-     * @param order receives a InboundOrderDTO
-     * @param batchStocks receives a Batch stock list
-     * @return a new Inbound order after validates if warehouse and sections exists
+     * Save in database a new inbound order.
+     * @param order receives a InboundOrderDTO.
+     * @param batchStocks receives a Batch stock list.
+     * @return a new Inbound order after validates if warehouse and sections exists.
      */
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
@@ -70,7 +73,8 @@ public class InboundOrderService {
     }
 
     /**
-     * @param id receives a order number
+     * Validate inbound order if exists.
+     * @param id receives an order number.
      */
     public void validateExistence(Long id) {
         if(get(id) != null) {

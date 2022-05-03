@@ -32,18 +32,18 @@ public class SectionService {
     }
 
     /**
-     * Search a section by Id
-     * @param id receives a sectionId to perform a search
-     * @return the result of search, if not find, this will return a "SECTION_NOT_FOUND"
+     * Search a section by Id.
+     * @param id receives a sectionId to perform a search.
+     * @return the result of search, if not find, this will return a "SECTION_NOT_FOUND".
      */
     public Section findById(Long id) {
         return get(id).orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
     }
 
     /**
-     * Verify the batchStocks size
-     * @param batchStocks receives a List<BatchStock> with the size
-     * @return the size of batch stock informed
+     * Verify the batchStocks size.
+     * @param batchStocks receives a List<BatchStock> with the size.
+     * @return the size of batch stock informed.
      */
     private Long getTotalBatchSize(List<BatchStock> batchStocks){
         return batchStocks.stream().map(
@@ -52,9 +52,9 @@ public class SectionService {
     }
 
     /**
-     * Verify the section size
-     * @param section receives a Section with the size
-     * @return the size of Section informed
+     * Verify the section size.
+     * @param section receives a Section with the size.
+     * @return the size of Section informed.
      */
     public Long getAvailableSpace(Section section){
         List<InboundOrder> inboundOrders = section.getInboundOrders();
@@ -67,9 +67,9 @@ public class SectionService {
     }
 
     /**
-     * Verify if Section exists and if haves enough space for store InboundOrder
-     * @param sectionId receives a Long sectorId to indicate where it batchstock go
-     * @param batchStocks receives a List<BatchStock> to store inside section
+     * Verify if Section exists and if haves enough space for store InboundOrder.
+     * @param sectionId receives a Long sectorId to indicate where it batchstock go.
+     * @param batchStocks receives a List<BatchStock> to store inside section.
      */
     public void validateBatchStocksBySection(Long sectionId, List<BatchStock> batchStocks) {
         Optional<Section> sectionOptional = get(sectionId);
@@ -86,9 +86,9 @@ public class SectionService {
     }
 
     /**
-     * validates that the temperature is in accordance with the section
-     * @param productDTO receives a productDTO to validate the temperature
-     * @param section receives a section to validate the temperature with product
+     * Validates that the temperature is in accordance with the section.
+     * @param productDTO receives a productDTO to validate the temperature.
+     * @param section receives a section to validate the temperature with product.
      */
 
     public void validateProductToSectionAssociation(ProductDTO productDTO, Section section) {
@@ -99,10 +99,10 @@ public class SectionService {
     }
 
     /**
-     * Associate the product with a section by both ids
-     * @param sectionId receives a Long sectionId where will he get the product
-     * @param productId receives a Long productId where it will be associated with section
-     * @return an association between product and section, if validation passes
+     * Associate the product with a section by both ids.
+     * @param sectionId receives a Long sectionId where will he get the product.
+     * @param productId receives a Long productId where it will be associated with section.
+     * @return an association between product and section, if validation passes.
      */
 
     public Section associateProductToSectionByIds(Long sectionId, Long productId) {

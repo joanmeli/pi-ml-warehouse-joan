@@ -27,11 +27,11 @@ public class InboundOrderController extends APIController{
     }
 
     /**
-     * POST method to create an InboundOrder
-     * @param order generate order payload
-     * @param uriBuilder Injection used by Spring to send the location
-     * @return URI of InboundOrder on header location, the entity response with status code "201-Created"
-     * Register a batch with product stock
+     * POST method to create an InboundOrder.
+     * @param order generate order payload.
+     * @param uriBuilder Injection used by Spring to send the location.
+     * @return URI of InboundOrder on header location, the entity response with status code "201-Created".
+     * Register a batch with product stock.
      */
 
     @PostMapping("/fresh-products/inboundorder")

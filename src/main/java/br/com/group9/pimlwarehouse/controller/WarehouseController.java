@@ -58,10 +58,10 @@ public class WarehouseController extends APIController{
     }
 
     /**
-     * GET method to search a product by id inside a warehouse
-     * @param productId receives a Long id of product in the path variable
-     * @return the warehouses where contains the product informed,
-     * if there is no product with informed id on any warehouses, it return "404-Not Found"
+     * GET method to search a product by id inside a warehouse.
+     * @param productId receives a Long id of product in the path variable.
+     * @return the warehouses where contains the product informed.
+     * If there is no product with informed id on any warehouses, it return "404-Not Found".
      */
 
     @GetMapping("/fresh-products/warehouse/{productId}")
@@ -71,10 +71,10 @@ public class WarehouseController extends APIController{
     }
 
     /**
-     * GET method to find and list all of products where it appear in stock
-     * @param productIds receives a list of productsIds where the list type is Long
-     * @param orderBy receives the type of sorting that will be performed
-     * @return the location of the products ordered by Batch number, current quantity and due date
+     * GET method to find and list all of products where it appear in stock.
+     * @param productIds receives a list of productsIds where the list type is Long.
+     * @param orderBy receives the type of sorting that will be performed.
+     * @return the location of the products ordered by Batch number, current quantity and due date.
      */
 
     @GetMapping("/fresh-products/list")

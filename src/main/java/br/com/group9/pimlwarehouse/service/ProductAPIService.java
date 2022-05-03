@@ -19,9 +19,10 @@ public class ProductAPIService {
     }
 
     /**
-     * @param id receives a productId to associate a section
-     * @return Will perform a communication with the products API and returns the result,
-     * if an exception occurs, returns "PRODUCT_NOT_FOUND"
+     * Fetch for product by Id in the products API.
+     * @param id receives a productId to associate a section.
+     * @return will perform a communication with the products API and returns the result.
+     * If an exception occurs, returns "PRODUCT_NOT_FOUND".
      */
 
     public ProductDTO fetchProductById(Long id) {
