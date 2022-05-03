@@ -1,9 +1,8 @@
 package br.com.group9.pimlwarehouse.Services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
+import br.com.group9.pimlwarehouse.enums.CategoryENUM;
 import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
 import br.com.group9.pimlwarehouse.repository.SectionRepository;
@@ -15,10 +14,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 public class BatchStockServiceTest {
@@ -38,7 +38,7 @@ public class BatchStockServiceTest {
 
     @Test
     public void shouldSaveAListOfBatchStocks(){
-        List<BatchStock> batchStockList = new ArrayList<BatchStock>();
+        List<BatchStock> batchStockList = new ArrayList<>();
         batchStockList.add(new BatchStock());
         batchStockList.add(new BatchStock());
         batchStockList.add(new BatchStock());
@@ -50,7 +50,7 @@ public class BatchStockServiceTest {
     }
     @Test
     public void shouldReturnBatchStocksByProductId(){
-        List<BatchStock> batchStockList = new ArrayList<BatchStock>();
+        List<BatchStock> batchStockList = new ArrayList<>();
         batchStockList.add(new BatchStock());
         batchStockList.add(new BatchStock());
         batchStockList.add(new BatchStock());
@@ -65,16 +65,46 @@ public class BatchStockServiceTest {
     public void shouldUpdateBatchStockInitialQuantity(){
 
         List<BatchStock> newBatchStocks = new ArrayList<>();
-        newBatchStocks.add(BatchStock.builder().initialQuantity(121).build());
-        newBatchStocks.add(BatchStock.builder().initialQuantity(122).build());
-        newBatchStocks.add(BatchStock.builder().initialQuantity(123).build());
+        newBatchStocks.add(BatchStock.builder().batchNumber(1).currentQuantity(121).build());
+        newBatchStocks.add(BatchStock.builder().batchNumber(2).currentQuantity(122).build());
+        newBatchStocks.add(BatchStock.builder().batchNumber(3).currentQuantity(123).build());
         List<BatchStock> oldBatchStocks = new ArrayList<>();
-        oldBatchStocks.add(BatchStock.builder().initialQuantity(121).build());
-        oldBatchStocks.add(BatchStock.builder().initialQuantity(221).build());
-        oldBatchStocks.add(BatchStock.builder().initialQuantity(321).build());
+        oldBatchStocks.add(BatchStock.builder().batchNumber(1).currentQuantity(121).build());
+        oldBatchStocks.add(BatchStock.builder().batchNumber(2).currentQuantity(221).build());
+        oldBatchStocks.add(BatchStock.builder().batchNumber(3).currentQuantity(321).build());
 
-        InboundOrder order = InboundOrder.builder().batchStocks(newBatchStocks).build();
+        InboundOrder order = InboundOrder.builder().batchStocks(oldBatchStocks).build();
 
         assertThrows(InboundOrderValidationException.class, () -> batchStockService.update(newBatchStocks, null));
+        assertDoesNotThrow(() -> batchStockService.update(newBatchStocks, order));
+
+        order.getBatchStocks().remove(1);
+        assertThrows(InboundOrderValidationException.class, () -> batchStockService.update(newBatchStocks, order));
+
+    }
+
+    @Test
+    public void shouldReturnProductByDueDate() {
+
+        BatchStock batchStock1 = BatchStock.builder().batchNumber(1).dueDate(LocalDate.now().plusMonths(2)).build();
+        BatchStock batchStock2 = BatchStock.builder().batchNumber(2).dueDate(LocalDate.now().plusMonths(3)).build();
+        BatchStock batchStock3 = BatchStock.builder().batchNumber(3).dueDate(LocalDate.now().plusMonths(4)).build();
+
+        List<BatchStock> orderedBatchStocks = new ArrayList<>();
+        orderedBatchStocks.add(batchStock1);
+        orderedBatchStocks.add(batchStock2);
+        orderedBatchStocks.add(batchStock3);
+
+        List<BatchStock> unorderedBatchStocks = new ArrayList<>();
+        unorderedBatchStocks.add(batchStock3);
+        unorderedBatchStocks.add(batchStock1);
+        unorderedBatchStocks.add(batchStock2);
+
+        Mockito.when(batchStockRepository.findByDueDateBetweenAndCategory(
+                any(LocalDate.class), any(LocalDate.class), any(CategoryENUM.class))
+        ).thenReturn(unorderedBatchStocks);
+
+        List<BatchStock> batchStockList = batchStockService.getAllBatchesByDueDate(null, 30L, CategoryENUM.FF);
+        assertEquals(orderedBatchStocks, batchStockList);
     }
 }

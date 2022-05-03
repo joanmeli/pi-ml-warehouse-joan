@@ -72,18 +72,14 @@ public class BatchStockService {
 
     public List<BatchStock> getAllBatchesByDueDate(Long sectionId, Long days, CategoryENUM category) {
         if (sectionId == null){
-            List<BatchStock> batchStocks= getAllBatchesByDueDate(days);
-            return batchStocks.stream().filter(batchStock ->
-                    batchStock.getCategory().equals(category)
-            ).collect(Collectors.toList());
+            return getAllBatchesByDueDateAndCategory(days, category);
         }
 
         Section section = sectionService.findById(sectionId);
-
-        return getAllBatchesByDueDate(section,days);
+        return getAllBatchesByDueDateAndSection(section,days);
     }
 
-    public List<BatchStock> getAllBatchesByDueDate(Section section, Long days) {
+    private List<BatchStock> getAllBatchesByDueDateAndSection(Section section, Long days) {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
         return section.getInboundOrders().stream().map(
@@ -91,13 +87,11 @@ public class BatchStockService {
         ).flatMap(List::stream).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
-    public List<BatchStock> getAllBatchesByDueDate(Long days) {
+    private List<BatchStock> getAllBatchesByDueDateAndCategory(Long days, CategoryENUM category) {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
-        List<BatchStock> batchStocks = batchStockRepository.findAll();
-        return batchStocks.stream().map(batchStock ->
-                batchStockRepository.findByDueDateBetween(today,upperDate)
-        ).flatMap(List::stream).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
+        return batchStockRepository.findByDueDateBetweenAndCategory(today,upperDate ,category).stream()
+                .sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
 
