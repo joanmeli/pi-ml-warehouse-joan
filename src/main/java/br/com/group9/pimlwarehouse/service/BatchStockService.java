@@ -39,9 +39,8 @@ public class BatchStockService {
     }
 
     public List<BatchStock> findByProductIdWithValidShelfLife(Long productId){
-        LocalDate maxDueDate = LocalDate.now().minusDays(21);
-        List<BatchStock> byProductIdAndDueDateIsBefore = batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
-        return byProductIdAndDueDateIsBefore;
+        LocalDate maxDueDate = LocalDate.now().plusDays(21);
+        return batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
     }
   
     private void updateBatchStock(BatchStock newBatchStock, BatchStock oldBatchStock){
