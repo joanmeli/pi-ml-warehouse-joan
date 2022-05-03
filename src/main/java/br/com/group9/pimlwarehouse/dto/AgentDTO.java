@@ -23,14 +23,12 @@ public class AgentDTO {
     @NotBlank(message = "Informar uma senha para login.")
     private String username;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Informar uma senha para login.")
     private String password;
 
     @Email(message = "Informar um e-mail válido.")
     private String email;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private final String role = "agent";
 
     @NotNull(message = "Informar o ID do Armazém do cadastro.")
