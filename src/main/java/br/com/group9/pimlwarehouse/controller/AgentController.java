@@ -21,7 +21,7 @@ public class AgentController extends APIController {
 
     /**
      * POST method to create agent
-     * @param agentDTO returns the registered data of the agent
+     * @param agentDTO send agent data
      * @return returns agent payload created and status "201-Created"
      */
     @PostMapping(BASE_PATH)

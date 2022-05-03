@@ -16,33 +16,56 @@ public class BatchStockService {
     private BatchStockRepository batchStockRepository;
     private InboundOrderRepository inboundOrderRepository;
 
+
     public BatchStockService(BatchStockRepository batchStockRepository, InboundOrderRepository inboundOrderRepository) {
         this.batchStockRepository = batchStockRepository;
         this.inboundOrderRepository = inboundOrderRepository;
     }
 
+    /**
+     * @param batchStocks receive a batch stock list
+     * @return the list of batch stock after persist in database
+     */
     public List<BatchStock> save(List<BatchStock> batchStocks) {
         return batchStocks.stream().map(
                 e -> batchStockRepository.save(e)).collect(Collectors.toList()
         );
 
     }
-  
+
+    /**
+     * @param productId receives a Long id of product
+     * @return the product according to the Id informed in a list of batch stock
+     */
     public List<BatchStock> findByProductId(Long productId){
         return batchStockRepository.findByProductId(productId);
     }
 
+    /**
+     * @param productId receives a Long id of product
+     * @return the product ID informed that it is within the validity period
+     */
     public List<BatchStock> findByProductIdWithValidShelfLife(Long productId){
         LocalDate maxDueDate = LocalDate.now().minusDays(21);
         List<BatchStock> byProductIdAndDueDateIsBefore = batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
         return byProductIdAndDueDateIsBefore;
     }
-  
+
+    /**
+     * @param newBatchStock get oldBatchStock and retrieve the ID
+     * @param oldBatchStock get oldBatchStock id
+     * @return return a new batch stock
+     */
     private BatchStock updateBatchStockId(BatchStock newBatchStock, BatchStock oldBatchStock){
         newBatchStock.setId(oldBatchStock.getId());
         return newBatchStock;
     }
 
+    /**
+     * @param batchStocks receive a valid batch stock list
+     * @param newBatchStocks receive new batch stock list
+     * @return save the batch stock
+     */
     private List<BatchStock> updateBatchStocks(List<BatchStock> batchStocks, List<BatchStock> newBatchStocks){
         List<BatchStock> toSaveBatchStocks =  batchStocks.stream().map(batchStock ->
                 updateBatchStockId(newBatchStocks.stream()
@@ -53,6 +76,13 @@ public class BatchStockService {
         return  save(toSaveBatchStocks);
     }
 
+    /**
+     * @param batchStocks receive a batch stock list
+     * @param order receive the order that will be updated
+     * @return if order equal null or the size of order batch stock is different of batch stocks size,
+     * it throws a InboundOrderValidationException
+     * if not, will run updateBatchStocks
+     */
     public List<BatchStock> update(List<BatchStock> batchStocks, InboundOrder order) {
 
         if(order == null) {
