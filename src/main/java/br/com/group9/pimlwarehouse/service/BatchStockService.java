@@ -148,6 +148,12 @@ public class BatchStockService {
             throw new BatchStockWithdrawException("STOCK_QUANTITY_NOT_ENOUGH");
     }
 
+    /**
+     * Receives a map from withdrawStockByProductId to withdraw stock
+     * @param batchStocks receives a stock by product
+     * @param checkoutQuantity receives a quantity of products to withdraw
+     * @return updated stock after withdraw quantity
+     */
     private List<BatchStock> withdrawFromStock(List<BatchStock> batchStocks, Integer checkoutQuantity) {
         batchStocks = new OrderByDueDate().apply(batchStocks);
         List<BatchStock> changedStocks = new ArrayList<>();
@@ -163,6 +169,12 @@ public class BatchStockService {
         }
         return this.batchStockRepository.saveAll(changedStocks);
     }
+
+    /**
+     * Withdraw stock by products IDs informed.
+     * @param quantityByProductMap receives a Map<Long, Integer> where sends quantities and IDs of products.
+     * @return the quantity update stock of products by ID.
+     */
 
     public List<BatchStock> withdrawStockByProductId(Map<Long, Integer> quantityByProductMap) {
         Map<Long, List<BatchStock>> stockByProductMap = quantityByProductMap.entrySet()

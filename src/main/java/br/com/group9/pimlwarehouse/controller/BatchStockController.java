@@ -42,6 +42,14 @@ public class BatchStockController extends APIController {
         return ResponseEntity.ok(ProductWarehouseDTO.convert(productId, WarehouseProductDTO.convert(product)));
     }
 
+    /**
+     * GET method to search products by due date.
+     * @param sectionId receives the section id to search for products.
+     * @param days receives a due date to search.
+     * @param category receives a category of product.
+     * @return the result of search, showing products with due date max off 21 days.
+     */
+
     @GetMapping("/fresh-products/due-date")
     public ResponseEntity<List<BatchStockByDuaDateDTO>> findProductsByDueDate(
             @RequestParam (required = false) Long sectionId,
@@ -68,6 +76,12 @@ public class BatchStockController extends APIController {
         Map<Long, List<BatchStock>> foundBatchStocks = this.warehouseService.getProductsInStockByIds(productIds, orderBy);
         return ResponseEntity.ok(SectionBatchStockDTO.map(foundBatchStocks));
     }
+
+    /**
+     * POST method to withdraw products from stock.
+     * @param products receives a List<ProductBatchStockDTO> to withdraw.
+     * @return the current quantity of stock after withdraw product.
+     */
 
     @PostMapping("/fresh-products/")
     public ResponseEntity<List<BatchStockDTO>> withdrawStock(@RequestBody List<ProductBatchStockDTO> products) {
