@@ -13,4 +13,5 @@ public interface BatchStockRepository extends JpaRepository<BatchStock, Long> {
     List<BatchStock> findByProductIdAndDueDateIsAfter(Long productId, LocalDate dueDate);
     List<BatchStock> findByDueDateBetweenAndInboundOrder(LocalDate startDate, LocalDate endDate, InboundOrder inboundOrder);
     List<BatchStock> findByDueDateBetween(LocalDate startDate, LocalDate endDate);
+    List<BatchStock> findByInboundOrder(InboundOrder inboundOrder);
 }

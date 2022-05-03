@@ -23,7 +23,6 @@ public class BatchStockService {
     public BatchStockService(
             BatchStockRepository batchStockRepository,
             SectionService sectionService
-
     ) {
         this.batchStockRepository = batchStockRepository;
         this.sectionService = sectionService;
@@ -33,7 +32,6 @@ public class BatchStockService {
         return batchStocks.stream().map(
                 e -> batchStockRepository.save(e)).collect(Collectors.toList()
         );
-
     }
   
     public List<BatchStock> findByProductId(Long productId){
@@ -46,19 +44,19 @@ public class BatchStockService {
         return byProductIdAndDueDateIsBefore;
     }
   
-    private BatchStock updateBatchStock(BatchStock newBatchStock, BatchStock oldBatchStock){
-        oldBatchStock.setInitialQuantity(newBatchStock.getInitialQuantity());
-        return newBatchStock;
+    private void updateBatchStock(BatchStock newBatchStock, BatchStock oldBatchStock){
+        oldBatchStock.setCurrentQuantity(newBatchStock.getCurrentQuantity());
+        batchStockRepository.save(oldBatchStock);
     }
 
     private List<BatchStock> updateBatchStocks(List<BatchStock> batchStocks, List<BatchStock> newBatchStocks){
-        List<BatchStock> toSaveBatchStocks =  batchStocks.stream().map(batchStock ->
+        batchStocks.forEach(batchStock ->
                 updateBatchStock(newBatchStocks.stream()
                     .filter(nb -> batchStock.getBatchNumber().equals(nb.getBatchNumber()))
                     .findAny().orElseThrow(() -> new InboundOrderValidationException("BATCH_STOCK_NOT_FOUND")), batchStock)
 
-        ).collect(Collectors.toList());
-        return  save(toSaveBatchStocks);
+        );
+        return batchStocks;
     }
 
     public List<BatchStock> update(List<BatchStock> batchStocks, InboundOrder order) {

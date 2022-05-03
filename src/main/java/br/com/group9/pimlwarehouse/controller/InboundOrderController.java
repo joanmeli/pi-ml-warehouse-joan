@@ -1,8 +1,6 @@
 package br.com.group9.pimlwarehouse.controller;
 
-import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
-import br.com.group9.pimlwarehouse.dto.InboundOrderDTO;
-import br.com.group9.pimlwarehouse.dto.ProductDTO;
+import br.com.group9.pimlwarehouse.dto.*;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.service.BatchStockService;
@@ -56,16 +54,16 @@ public class InboundOrderController extends APIController{
     }
 
     @PutMapping("/fresh-products/inboundorder")
-    public ResponseEntity<List<BatchStockDTO>> update(
-            @RequestBody  InboundOrderDTO order , UriComponentsBuilder uriBuilder
+    public ResponseEntity<List<UpdateBatchStockDTO>> update(
+            @RequestBody UpdateInboundOrderDTO order , UriComponentsBuilder uriBuilder
     ){
         InboundOrder orderToUpdate = inboundOrderService.get(order.getOrderNumber());
-        List<Map<ProductDTO, BatchStockDTO>> batchStocks = productAPIService.getProductInfo(order.getBatchStockList());
+        List<BatchStock> batchStocks = UpdateBatchStockDTO.convert(order.getBatchStockList() ,orderToUpdate);
         // Salvando os lotes
         List<BatchStock> inboundOrderUpdated = batchStockService.update(
-                BatchStockDTO.convert(batchStocks, orderToUpdate), orderToUpdate
+                batchStocks, orderToUpdate
         );
-        List<BatchStockDTO> batchStockDTOS = BatchStockDTO.convert(inboundOrderUpdated);
+        List<UpdateBatchStockDTO> batchStockDTOS = UpdateBatchStockDTO.convert(inboundOrderUpdated);
         URI uri = uriBuilder
                 .path("/fresh-products/inboundorder")
                 .buildAndExpand(orderToUpdate.getId())
