@@ -3,6 +3,7 @@ package br.com.group9.pimlwarehouse.service;
 import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
 import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
+import br.com.group9.pimlwarehouse.service.handler.ProductAPIErrorHandler;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,18 +21,14 @@ public class ProductAPIService {
 
     public ProductAPIService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder
+                .errorHandler(new ProductAPIErrorHandler())
                 .build();
     }
 
     public ProductDTO fetchProductById(Long id) {
         String resourceURI = PRODUCT_API_URI.concat(PRODUCTS_RESOURCE).concat("/").concat(id.toString());
-        // TODO: 27/04/22 Create custom validations on Response for Product API.
-        try {
-            ResponseEntity<ProductDTO> result = restTemplate.getForEntity(resourceURI, ProductDTO.class);
-            return result.getBody();
-        } catch (RuntimeException ex) {
-            throw new ProductNotFoundException("PRODUCT_NOT_FOUND");
-        }
+        ResponseEntity<ProductDTO> result = restTemplate.getForEntity(resourceURI, ProductDTO.class);
+        return result.getBody();
     }
 
     public ProductDTO fetchProductsById(Map<String, List<Long>> ids) {

@@ -24,7 +24,7 @@ public class WarehouseDTO {
 
     @Valid
     @NotEmpty(message = "Informar ao menos 1 Setor no Armazém.")
-    @JsonIgnoreProperties({"products"})
+    @JsonIgnoreProperties({"allowedProducts"})
     private List<SectionDTO> sections;
 
     public Warehouse map() {
