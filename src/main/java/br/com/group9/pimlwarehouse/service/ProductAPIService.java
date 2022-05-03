@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductAPIService {
-    private static final String PRODUCT_API_URI = "https://4bf27f8c-fe37-4752-b67f-a9aba01d33a4.mock.pstmn.io";
-    private static final String PRODUCTS_RESOURCE = "/api/v1/fresh-products";
+    private static final String PRODUCT_API_URI = "http://products:8081";
+    private static final String PRODUCTS_RESOURCE = "/fresh-products/v1";
     private final RestTemplate restTemplate;
 
     public ProductAPIService(RestTemplateBuilder restTemplateBuilder) {
