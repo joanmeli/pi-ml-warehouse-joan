@@ -2,17 +2,22 @@ package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
-import br.com.group9.pimlwarehouse.entity.Section;
-import br.com.group9.pimlwarehouse.enums.CategoryENUM;
-
+import br.com.group9.pimlwarehouse.exception.BatchStockWithdrawException;
 import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
+import br.com.group9.pimlwarehouse.util.batch_stock_order.OrderByDueDate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import br.com.group9.pimlwarehouse.entity.Section;
+import br.com.group9.pimlwarehouse.enums.CategoryENUM;
+
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BatchStockService {
@@ -93,6 +98,39 @@ public class BatchStockService {
                 .sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
+    private void validateStockQuantity(List<BatchStock> batchStocks, Integer checkoutQuantity) {
+        Integer quantityInStock = batchStocks.stream().map(b -> b.getCurrentQuantity()).reduce(0, Integer::sum);
+        if(quantityInStock < checkoutQuantity)
+            throw new BatchStockWithdrawException("STOCK_QUANTITY_NOT_ENOUGH");
+    }
 
+    private List<BatchStock> withdrawFromStock(List<BatchStock> batchStocks, Integer checkoutQuantity) {
+        batchStocks = new OrderByDueDate().apply(batchStocks);
+        List<BatchStock> changedStocks = new ArrayList<>();
+        while(checkoutQuantity > 0) {
+            BatchStock batchStock = batchStocks.stream().filter(b -> b.getCurrentQuantity() > 0).findFirst()
+                    .orElseThrow(() -> new BatchStockWithdrawException("STOCK_QUANTITY_SUDDENLY_CHANGED"));
+            Integer batchQuantity = batchStock.getCurrentQuantity() > checkoutQuantity
+                    ? checkoutQuantity
+                    : batchStock.getCurrentQuantity();
+            batchStock.withdrawQuantity(batchQuantity);
+            changedStocks.add(batchStock);
+            checkoutQuantity -= batchQuantity;
+        }
+        return this.batchStockRepository.saveAll(changedStocks);
+    }
+
+    public List<BatchStock> withdrawStockByProductId(Map<Long, Integer> quantityByProductMap) {
+        Map<Long, List<BatchStock>> stockByProductMap = quantityByProductMap.entrySet()
+                .stream().map(quantityByProduct -> {
+                    List<BatchStock> batchStocks = findByProductIdWithValidShelfLife(quantityByProduct.getKey());
+                    validateStockQuantity(batchStocks, quantityByProduct.getValue());
+                    return Map.entry(quantityByProduct.getKey(), batchStocks);
+                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (a, b) -> Stream.concat(a.stream(), b.stream()).collect(Collectors.toList())));
+        return stockByProductMap.entrySet().stream().map(s ->
+                withdrawFromStock(s.getValue(), quantityByProductMap.get(s.getKey()))
+        ).flatMap(List::stream).collect(Collectors.toList());
+    }
 }
 

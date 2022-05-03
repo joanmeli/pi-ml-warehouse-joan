@@ -29,6 +29,7 @@ public class InboundOrderDTO {
 
         return InboundOrder.builder()
                 .section(section.convert())
+                .id(orderNumber)
                 .orderDate(orderDate)
                 .build();
     }

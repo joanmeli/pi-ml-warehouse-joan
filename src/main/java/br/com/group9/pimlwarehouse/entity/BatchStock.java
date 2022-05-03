@@ -31,4 +31,8 @@ public class BatchStock {
     private Integer currentQuantity;
     @Enumerated(EnumType.STRING)
     private CategoryENUM category;
+
+    public void withdrawQuantity(Integer quantity){
+        this.currentQuantity -= quantity;
+    }
 }
