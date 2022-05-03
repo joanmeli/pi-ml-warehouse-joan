@@ -10,8 +10,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AuthenticationAPIService {
-    private static final String AUTH_API_URI = "https://5bb63d0d-cc34-49d7-9440-7248d665c6dd.mock.pstmn.io";
-    private static final String AUTH_RESOUCE = "/api/v1/user";
+    private static final String AUTH_API_URI = "http://gandalf:8080";
+    private static final String AUTH_RESOURCE = "/user/v1";
     private final RestTemplate restTemplate;
     private WarehouseService warehouseService;
 
@@ -22,7 +22,7 @@ public class AuthenticationAPIService {
     }
 
     public AgentDTO createAgent(AgentDTO agentDTO) {
-        String resourceURI = AUTH_API_URI.concat(AUTH_RESOUCE).concat("/");
+        String resourceURI = AUTH_API_URI.concat(AUTH_RESOURCE).concat("/");
 
         if(!this.warehouseService.exists(agentDTO.getWarehouseId()))
             throw new WarehouseNotFoundException("WAREHOUSE_NOT_FOUND");
