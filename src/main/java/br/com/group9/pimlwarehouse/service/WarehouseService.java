@@ -54,7 +54,7 @@ public class WarehouseService {
     /**
      * Search all warehouses and sections for BatchStocks containing the given productIds.
      * @param productsId Receives a List<Long> where each Long is a productId to be searched.
-     * @return Returns a Map<Long, List<BatchStock>> where the Long value is the productId and the List is the
+     * @return a Map<Long, List<BatchStock>> where the Long value is the productId and the List is the
      * BatchStock that contains the given productId.
      */
     public Map<Long, List<BatchStock>> getProductsInStockByIds(List<Long> productsId, OrderBatchStockEnum orderBy) {

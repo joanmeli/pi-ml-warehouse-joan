@@ -18,6 +18,12 @@ public class ProductAPIService {
                 .build();
     }
 
+    /**
+     * @param id receives a productId to associate a section
+     * @return Will perform a communication with the products API and returns the result,
+     * if an exception occurs, returns "PRODUCT_NOT_FOUND"
+     */
+
     public ProductDTO fetchProductById(Long id) {
         String resourceURI = PRODUCT_API_URI.concat(PRODUCTS_RESOURCE).concat("/").concat(id.toString());
         // TODO: 27/04/22 Create custom validations on Response for Product API.

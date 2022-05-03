@@ -25,11 +25,21 @@ public class InboundOrderService {
         this.inboundOrderRepository = inboundOrderRepository;
     }
 
-
+    /**
+     * @param id receives a order number
+     * @return the result of search in database if exists,
+     * if not, it will return null
+     */
     public InboundOrder get(Long id) {
         Optional<InboundOrder> op = this.inboundOrderRepository.findById(id);
         return op.orElse(null);
     }
+
+    /**
+     * @param warehouseId receives a warehouseId of inboundOrder
+     * @param sectorId receives a sectorId of inboundOrder
+     * @param batchStocks receives a Batch stock list
+     */
 
     public void validateInboundOrder(
             Long warehouseId, Long sectorId, List<BatchStock> batchStocks
@@ -43,6 +53,12 @@ public class InboundOrderService {
 
     }
 
+    /**
+     * @param order receives a InboundOrderDTO
+     * @param batchStocks receives a Batch stock list
+     * @return a new Inbound order after validates if warehouse and sections exists
+     */
+
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
 
         // Validar ordem de entrada
@@ -53,6 +69,9 @@ public class InboundOrderService {
         return inboundOrderRepository.save(order);
     }
 
+    /**
+     * @param id receives a order number
+     */
     public void validateExistence(Long id) {
         if(get(id) != null) {
             throw new InboundOrderValidationException("INBOUND_ORDER_ALREADY_EXISTS");
