@@ -1,5 +1,7 @@
 package br.com.group9.pimlwarehouse.service;
 
+import br.com.group9.pimlwarehouse.dto.BatchStockDTO;
+import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
@@ -7,6 +9,7 @@ import br.com.group9.pimlwarehouse.repository.InboundOrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -67,6 +70,7 @@ public class InboundOrderService {
      */
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
+
         // Validar ordem de entrada
         validateInboundOrder(
                 order.getSection().getWarehouse().getId(), order.getSection().getId(), order.getId(),

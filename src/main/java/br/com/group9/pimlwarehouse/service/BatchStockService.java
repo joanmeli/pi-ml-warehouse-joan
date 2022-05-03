@@ -65,7 +65,6 @@ public class BatchStockService {
         List<BatchStock> byProductIdAndDueDateIsBefore = batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
         return byProductIdAndDueDateIsBefore;
     }
-
     /**
      * Update batch stock Id.
      * @param newBatchStock get oldBatchStock and retrieve the Id.
