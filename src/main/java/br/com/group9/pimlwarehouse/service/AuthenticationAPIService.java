@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AuthenticationAPIService {
-    private static final String AUTH_API_URI = "http://localhost:8080";
+    private static final String AUTH_API_URI = "http://gandalf:8080";
     private static final String AUTH_RESOURCE = "/user/v1";
     private final RestTemplate restTemplate;
     private WarehouseService warehouseService;
