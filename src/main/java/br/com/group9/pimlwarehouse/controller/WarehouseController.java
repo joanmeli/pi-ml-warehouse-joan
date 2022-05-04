@@ -19,6 +19,14 @@ public class WarehouseController extends APIController{
         this.warehouseService = warehouseService;
     }
 
+    /**
+     * POST method for create a new Warehouse
+     * @param warehouseDTO receives a valid WarehouseDTO in body of the request
+     * @param uriBuilder Injection used by Spring to send the location
+     * @return the URI of warehouse on header location, the entity response with status code "201-Created" and
+     * the WarehouseDTO created as result
+     */
+
     @PostMapping(BASE_PATH)
     public ResponseEntity<WarehouseDTO> createWarehouse(@Valid @RequestBody WarehouseDTO warehouseDTO, UriComponentsBuilder uriBuilder) {
         Warehouse mappedWarehouse = warehouseDTO.map();
@@ -30,6 +38,13 @@ public class WarehouseController extends APIController{
                 .toUri();
         return ResponseEntity.created(uri).body(resultWarehouse);
     }
+
+    /**
+     * GET method to search a existing warehouse by id
+     * @param warehouseId receives a Long id of warehouse in the path variable
+     * @return the Warehouse registered with the id informed,
+     * If there is no warehouse with the given id, it returns "WAREHOUSE_NOT_FOUND"
+     */
 
     @GetMapping(BASE_PATH + "/{warehouseId}")
     public ResponseEntity<WarehouseDTO> findWarehouse(@PathVariable(name = "warehouseId") Long warehouseId) {

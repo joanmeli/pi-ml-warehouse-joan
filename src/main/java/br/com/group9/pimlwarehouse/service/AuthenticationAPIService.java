@@ -23,6 +23,12 @@ public class AuthenticationAPIService {
         this.warehouseService = warehouseService;
     }
 
+    /**
+     * Create a new agent if it has not linked to a warehouse.
+     * @param agentDTO receives agent data to do validation.
+     * @return warehouse Id will be informed, if it does not exist, returns "WAREHOUSE_NOT-FOUND".
+     * Will perform validation with the authentication API and will return, if an exception occurs, returns "PRODUCT_NOT_FOUND".
+     */
     public AgentDTO createAgent(AgentDTO agentDTO) {
         String resourceURI = AUTH_API_URI.concat(AUTH_RESOURCE).concat("/");
 
