@@ -23,9 +23,4 @@ public class WarehouseValidationHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    protected ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException exception) {
-        ErrorMessageDTO error = new ErrorMessageDTO(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
 }

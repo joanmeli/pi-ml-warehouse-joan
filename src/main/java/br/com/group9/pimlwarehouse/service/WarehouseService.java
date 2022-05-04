@@ -43,7 +43,9 @@ public class WarehouseService {
 
         List<BatchStock> batchStocks = batchStockService.findByProductId(productId);
 
-        if(batchStocks.isEmpty()) throw new ProductNotFoundException("PRODUCT_NOT_FOUND");
+        if(batchStocks.isEmpty()) {
+            throw new ProductNotFoundException("PRODUCT_NOT_FOUND");
+        }
 
         Map<Long, Integer> warehouses = batchStocks
                 .stream()
