@@ -23,6 +23,13 @@ public class SectionController extends APIController{
         this.sectionService = sectionService;
     }
 
+    /**
+     * POST method to associate a product to a section.
+     * @param sectionId get section Id.
+     * @param sectionProductDTO associate the product with a section according to its Id.
+     * @param uriBuilder Injection used by Spring to send the location.
+     * @return URI of InboundOrder on header location, the entity response with status code "201-Created" and associate the product with a section.
+     */
     @PostMapping(BASE_PATH + "/{sectionId}/product")
     public ResponseEntity<SectionDTO> associateProductToSection(
             @PathVariable(name = "sectionId") Long sectionId,
@@ -37,6 +44,11 @@ public class SectionController extends APIController{
         return ResponseEntity.created(uri).body(resultSection);
     }
 
+    /**
+     * GET method to found a section according to Id
+     * @param sectionId get section Id
+     * @return section of the informed ID
+     */
     @GetMapping(BASE_PATH + "/{sectionId}")
     public ResponseEntity<SectionDTO> findSection(@PathVariable(name = "sectionId") Long sectionId) {
         Section foundSection = this.sectionService.findById(sectionId);

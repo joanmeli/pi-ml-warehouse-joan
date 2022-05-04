@@ -7,12 +7,8 @@ import br.com.group9.pimlwarehouse.service.BatchStockService;
 import br.com.group9.pimlwarehouse.service.InboundOrderService;
 import br.com.group9.pimlwarehouse.service.ProductAPIService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +28,14 @@ public class InboundOrderController extends APIController{
         this.batchStockService = batchStockService;
         this.productAPIService = productAPIService;
     }
+
+    /**
+     * POST method to create an InboundOrder.
+     * @param order generate order payload.
+     * @param uriBuilder Injection used by Spring to send the location.
+     * @return URI of InboundOrder on header location, the entity response with status code "201-Created".
+     * Register a batch with product stock.
+     */
 
     @PostMapping("/fresh-products/inboundorder")
     public ResponseEntity<List<BatchStockDTO>> createInboundOrder(
@@ -53,6 +57,12 @@ public class InboundOrderController extends APIController{
         return ResponseEntity.created(uri).body(batchStockDTOS);
     }
 
+    /**
+     * PUT method to update List BatchStock
+     * @param order generate order payload
+     * @param uriBuilder Injection used by Spring to send the location
+     * @return URI of InboundOrder on header location, the entity response with status code "201-Created" and update in BatchStock
+     */
     @PutMapping("/fresh-products/inboundorder")
     public ResponseEntity<List<UpdateBatchStockDTO>> update(
             @RequestBody UpdateInboundOrderDTO order , UriComponentsBuilder uriBuilder
