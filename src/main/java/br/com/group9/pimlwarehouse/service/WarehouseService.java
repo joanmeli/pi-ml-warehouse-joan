@@ -2,6 +2,7 @@ package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
+import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
 import br.com.group9.pimlwarehouse.exception.WarehouseNotFoundException;
 import br.com.group9.pimlwarehouse.repository.WarehouseRepository;
 import br.com.group9.pimlwarehouse.util.batch_stock_order.OrderBatchStockEnum;
@@ -61,6 +62,10 @@ public class WarehouseService {
     public Map<Long, Integer> getAllWarehousesByProduct(Long productId) {
 
         List<BatchStock> batchStocks = batchStockService.findByProductId(productId);
+
+        if(batchStocks.isEmpty()) {
+            throw new ProductNotFoundException("PRODUCT_NOT_FOUND");
+        }
 
         Map<Long, Integer> warehouses = batchStocks
                 .stream()

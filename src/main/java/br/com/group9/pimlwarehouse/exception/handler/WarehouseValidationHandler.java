@@ -20,4 +20,5 @@ public class WarehouseValidationHandler {
         ErrorMessageDTO error = new ErrorMessageDTO(exception.getMessage());
         return ResponseEntity.badRequest().body(error);
     }
+
 }
