@@ -51,15 +51,13 @@ public class InboundOrderService {
     }
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
+        order.setBatchStocks(batchStocks);
         // Validar ordem de entrada
         validateInboundOrder(
                 order.getSection().getWarehouse().getId(), order.getSection().getId(), order.getId(),
                 batchStocks
         );
         InboundOrder orderSaved = inboundOrderRepository.save(order);
-        List<BatchStock> batchStocksSaved = batchStockService.save(
-                batchStocks
-        );
         return orderSaved;
     }
 

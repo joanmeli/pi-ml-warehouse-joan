@@ -15,8 +15,7 @@ import java.util.List;
 @Table(name = "inboundOrder")
 public class InboundOrder {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inboundOrder_id")
+    @Column(name = "inboundOrder_id", unique = true, nullable = false)
     private Long id;
     @ManyToOne()
     @JoinColumn(name="section_id")

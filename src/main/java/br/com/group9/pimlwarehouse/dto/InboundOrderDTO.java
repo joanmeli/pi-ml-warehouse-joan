@@ -1,14 +1,10 @@
 package br.com.group9.pimlwarehouse.dto;
 
-import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
-import br.com.group9.pimlwarehouse.entity.Section;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.Session;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
