@@ -18,9 +18,11 @@ import java.net.URI;
 public class SectionController extends APIController{
     private static final String BASE_PATH = "/section";
     private SectionService sectionService;
+    private WarehouseService warehouseService;
 
-    public SectionController(SectionService sectionService) {
+    public SectionController(SectionService sectionService, WarehouseService warehouseService) {
         this.sectionService = sectionService;
+        this.warehouseService = warehouseService;
     }
 
     /**
@@ -53,5 +55,28 @@ public class SectionController extends APIController{
     public ResponseEntity<SectionDTO> findSection(@PathVariable(name = "sectionId") Long sectionId) {
         Section foundSection = this.sectionService.findById(sectionId);
         return ResponseEntity.ok(SectionDTO.map(foundSection));
+    }
+
+    /**
+     * POST method to create a section in a warehouse.
+     * @param warehouseId Id of Warehouse where section will belong to.
+     * @param uriBuilder Injection used by Spring to send the location.
+     * @return URI of Section on header location, the entity response with status code "201-Created" and create a section in a Warehouse.
+     */
+    @PostMapping(BASE_PATH + "/{warehouseId}")
+    public ResponseEntity<SectionDTO> associateProductToSection(
+            @PathVariable Long warehouseId,
+            @Valid @RequestBody SectionDTO sectionDTO,
+            UriComponentsBuilder uriBuilder
+    ) {
+        Section section = sectionDTO.map();
+        Warehouse warehouse = warehouseService.findById(warehouseId);
+        Section savedSection = sectionService.save(section, warehouse);
+        SectionDTO resultSection = SectionDTO.simpleMap(savedSection);
+        URI uri = uriBuilder
+                .path(BASE_PATH.concat("/{id}"))
+                .buildAndExpand(section.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(resultSection);
     }
 }

@@ -1,10 +1,7 @@
 package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.dto.ProductDTO;
-import br.com.group9.pimlwarehouse.entity.BatchStock;
-import br.com.group9.pimlwarehouse.entity.InboundOrder;
-import br.com.group9.pimlwarehouse.entity.Section;
-import br.com.group9.pimlwarehouse.entity.SectionProduct;
+import br.com.group9.pimlwarehouse.entity.*;
 import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException;
 import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
 import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
@@ -20,7 +17,11 @@ public class SectionService {
     private SectionProductService sectionProductService;
     private ProductAPIService productAPIService;
 
-    public SectionService(SectionRepository sectionRepository, SectionProductService sectionProductService, ProductAPIService productAPIService) {
+    public SectionService(
+            SectionRepository sectionRepository,
+            SectionProductService sectionProductService,
+            ProductAPIService productAPIService
+    ) {
         this.sectionRepository = sectionRepository;
         this.sectionProductService = sectionProductService;
         this.productAPIService = productAPIService;
@@ -64,20 +65,20 @@ public class SectionService {
 
     /**
      * Verify if Section exists and if haves enough space for store InboundOrder.
-     * @param sectionId receives a Long sectorId to indicate where it batchstock go.
+     * @param sectorId receives a Long sectorId to indicate where it batchstock go.
      * @param batchStocks receives a List<BatchStock> to store inside section.
      */
     public void validateBatchStocksBySection(Long sectorId, Long warehouseId, List<BatchStock> batchStocks) {
         Section section = findById(sectorId);
 
-        if(section.getWarehouse().getId() != warehouseId)
+        if(!section.getWarehouse().getId().equals(warehouseId))
             throw new InboundOrderValidationException("SECTION_WAREHOUSE_DOES_NOT_MATCH");
 
         boolean productMatchesSection = batchStocks.stream()
-                .map(b -> b.getProductId())
+                .map(BatchStock::getProductId)
                 .anyMatch(prodId ->
                         section.getSectionProducts().stream()
-                                .filter(sectionProduct -> sectionProduct.getProductId() == prodId)
+                                .filter(sectionProduct -> sectionProduct.getProductId().equals(prodId))
                                 .findFirst().orElse(null) == null
                 );
         if(productMatchesSection)
@@ -128,5 +129,11 @@ public class SectionService {
 
         return this.sectionRepository.save(foundSection);
 
+    }
+
+    public Section save(Section section, Warehouse warehouse){
+        section.setWarehouse(warehouse);
+        sectionRepository.save(section);
+        return section;
     }
 }
