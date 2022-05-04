@@ -1,4 +1,4 @@
-package br.com.group9.pimlwarehouse.Services;
+package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
