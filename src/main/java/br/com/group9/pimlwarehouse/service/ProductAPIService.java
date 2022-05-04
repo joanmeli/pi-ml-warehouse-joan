@@ -25,6 +25,13 @@ public class ProductAPIService {
                 .build();
     }
 
+    /**
+     * Fetch for product by Id in the products API.
+     * @param id receives a productId to associate a section.
+     * @return will perform a communication with the products API and returns the result.
+     * If an exception occurs, returns "PRODUCT_NOT_FOUND".
+     */
+
     public ProductDTO fetchProductById(Long id) {
         String resourceURI = PRODUCT_API_URI.concat(PRODUCTS_RESOURCE).concat("/").concat(id.toString());
         ResponseEntity<ProductDTO> result = restTemplate.getForEntity(resourceURI, ProductDTO.class);
@@ -42,6 +49,11 @@ public class ProductAPIService {
         }
     }
 
+    /**
+     * Search in Product API information about a products inside a list of batch stock.
+     * @param batchStockList receives a List<BatchStockDTO>.
+     * @return returns a list of products from Product API.
+     */
     public List<Map<ProductDTO, BatchStockDTO>> getProductInfo(List<BatchStockDTO> batchStockList) {
         return batchStockList.stream().map(batchStockDTO ->
                 Map.of(fetchProductById(batchStockDTO.getProductId()), batchStockDTO)

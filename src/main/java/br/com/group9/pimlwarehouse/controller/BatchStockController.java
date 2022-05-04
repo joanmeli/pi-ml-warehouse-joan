@@ -28,12 +28,27 @@ public class BatchStockController extends APIController {
         this.sectionService = sectionService;
         this.warehouseService = warehouseService;
     }
+
+    /**
+     * GET method to search a product by id inside a warehouse.
+     * @param productId receives a Long id of product in the path variable.
+     * @return the warehouses where contains the product informed.
+     * If there is no product with informed id on any warehouses, it return "404-Not Found".
+     */
     
     @GetMapping("/fresh-products/warehouse/{productId}")
     public ResponseEntity<ProductWarehouseDTO> findProductInWarehouse(@PathVariable Long productId) {
         Map<Long, Integer> product = warehouseService.getAllWarehousesByProduct(productId);
         return ResponseEntity.ok(ProductWarehouseDTO.convert(productId, WarehouseProductDTO.convert(product)));
     }
+
+    /**
+     * GET method to search products by due date.
+     * @param sectionId receives the section id to search for products.
+     * @param days receives a due date to search.
+     * @param category receives a category of product.
+     * @return the result of search, showing products with due date max off 21 days.
+     */
 
     @GetMapping("/fresh-products/due-date")
     public ResponseEntity<List<BatchStockByDuaDateDTO>> findProductsByDueDate(
@@ -46,6 +61,13 @@ public class BatchStockController extends APIController {
         return ResponseEntity.ok(BatchStockByDuaDateDTO.convert(product));
     }
 
+    /**
+     * GET method to find and list all of products where it appear in stock.
+     * @param productIds receives a list of productsIds where the list type is Long.
+     * @param orderBy receives the type of sorting that will be performed.
+     * @return the location of the products ordered by Batch number, current quantity and due date.
+     */
+
     @GetMapping("/fresh-products/list")
     public ResponseEntity<List<SectionBatchStockDTO>> findProductsInStock(
             @RequestParam(name = "products", required = false, defaultValue = "") List<Long> productIds,
@@ -54,6 +76,12 @@ public class BatchStockController extends APIController {
         Map<Long, List<BatchStock>> foundBatchStocks = this.warehouseService.getProductsInStockByIds(productIds, orderBy);
         return ResponseEntity.ok(SectionBatchStockDTO.map(foundBatchStocks));
     }
+
+    /**
+     * POST method to withdraw products from stock.
+     * @param products receives a List<ProductBatchStockDTO> to withdraw.
+     * @return the current quantity of stock after withdraw product.
+     */
 
     @PostMapping("/fresh-products/")
     public ResponseEntity<List<BatchStockDTO>> withdrawStock(@RequestBody List<ProductBatchStockDTO> products) {
