@@ -2,7 +2,9 @@ package br.com.group9.pimlwarehouse.exception.handler;
 
 import br.com.group9.pimlwarehouse.dto.ErrorMessageDTO;
 import br.com.group9.pimlwarehouse.exception.BatchStockWithdrawException;
+import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
 import br.com.group9.pimlwarehouse.exception.WarehouseNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,5 +21,11 @@ public class WarehouseValidationHandler {
     protected ResponseEntity<Object> handleBatchStockWithdrawException(BatchStockWithdrawException exception) {
         ErrorMessageDTO error = new ErrorMessageDTO(exception.getMessage());
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    protected ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException exception) {
+        ErrorMessageDTO error = new ErrorMessageDTO(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }
