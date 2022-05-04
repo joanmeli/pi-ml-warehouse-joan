@@ -27,12 +27,9 @@ public class SectionService {
         this.productAPIService = productAPIService;
     }
 
-    public Optional<Section> get(Long id) {
-        return this.sectionRepository.findById(id);
-    }
-
     public Section findById(Long id) {
-        return get(id).orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
+        return this.sectionRepository.findById(id)
+                .orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
     }
 
     private Double getTotalBatchSize(List<BatchStock> batchStocks){
@@ -53,12 +50,7 @@ public class SectionService {
     }
 
     public void validateBatchStocksBySection(Long sectorId, List<BatchStock> batchStocks) {
-        Optional<Section> sectionOptional = get(sectorId);
-        if (sectionOptional.isEmpty()){
-            throw new InboundOrderValidationException("SECTION_NOT_FOUND");
-        }
-
-        Section section = sectionOptional.get();
+        Section section = findById(sectorId);
         Double availableSpace = getAvailableSpace(section);
         Double requiredSpace = getTotalBatchSize(batchStocks);
         if (requiredSpace > availableSpace){
