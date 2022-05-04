@@ -27,7 +27,9 @@ public class AuthenticationAPIService {
      * Create a new agent if it has not linked to a warehouse.
      * @param agentDTO receives agent data to do validation.
      * @return warehouse Id will be informed, if it does not exist, returns "WAREHOUSE_NOT-FOUND".
-     * Will perform validation with the authentication API and will return, if an exception occurs, returns "PRODUCT_NOT_FOUND".
+     * Will perform validation with the authentication API and will return, if the given agent already
+     * exists, returns "AGENT_ALREADY_EXISTS" or "MALFORMED_AGENT_DATA" if any other response from auth API.
+     * In case the validation call doesn't suceeds, returns "AUTHENTICATION_API_UNAVAILABLE" UnavailableException.
      */
     public AgentDTO createAgent(AgentDTO agentDTO) {
         String resourceURI = AUTH_API_URI.concat(AUTH_RESOURCE).concat("/");
