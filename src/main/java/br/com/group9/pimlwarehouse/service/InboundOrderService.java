@@ -58,7 +58,7 @@ public class InboundOrderService {
             throw new InboundOrderValidationException("WAREHOUSE_NOT_FOUND");
         }
         // validar o setor
-        sectionService.validateBatchStocksBySection(sectorId, batchStocks);
+        sectionService.validateBatchStocksBySection(sectorId, warehouseId, batchStocks);
 
     }
 
@@ -70,15 +70,13 @@ public class InboundOrderService {
      */
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
+        order.setBatchStocks(batchStocks);
         // Validar ordem de entrada
         validateInboundOrder(
                 order.getSection().getWarehouse().getId(), order.getSection().getId(), order.getId(),
                 batchStocks
         );
         InboundOrder orderSaved = inboundOrderRepository.save(order);
-        List<BatchStock> batchStocksSaved = batchStockService.save(
-                batchStocks
-        );
         return orderSaved;
     }
 

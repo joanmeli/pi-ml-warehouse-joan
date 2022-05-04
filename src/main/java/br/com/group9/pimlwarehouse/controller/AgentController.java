@@ -1,6 +1,7 @@
 package br.com.group9.pimlwarehouse.controller;
 
 import br.com.group9.pimlwarehouse.dto.AgentDTO;
+import br.com.group9.pimlwarehouse.dto.NewAgentDTO;
 import br.com.group9.pimlwarehouse.service.AuthenticationAPIService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,12 @@ public class AgentController extends APIController {
 
     /**
      * POST method to create agent.
-     * @param agentDTO send agent data.
+     * @param newAgentDTO send agent data.
      * @return returns agent payload created and status "201-Created".
      */
     @PostMapping(BASE_PATH)
-    public ResponseEntity<AgentDTO> createAgent(@Valid @RequestBody AgentDTO agentDTO) {
-        AgentDTO agent = this.authenticationAPIService.createAgent(agentDTO);
-        return new ResponseEntity<>(agent, HttpStatus.CREATED);
+    public ResponseEntity<NewAgentDTO> createAgent(@Valid @RequestBody NewAgentDTO newAgentDTO) {
+        AgentDTO agent = this.authenticationAPIService.createAgent(newAgentDTO.convert());
+        return new ResponseEntity<>(agent.convert(), HttpStatus.CREATED);
     }
 }

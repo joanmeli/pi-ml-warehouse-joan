@@ -13,7 +13,6 @@ import br.com.group9.pimlwarehouse.repository.SectionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SectionService {
@@ -27,17 +26,14 @@ public class SectionService {
         this.productAPIService = productAPIService;
     }
 
-    public Optional<Section> get(Long id) {
-        return this.sectionRepository.findById(id);
-    }
-
     /**
      * Search a section by Id.
      * @param id receives a sectionId to perform a search.
      * @return the result of search, if not find, this will return a "SECTION_NOT_FOUND".
      */
     public Section findById(Long id) {
-        return get(id).orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
+        return this.sectionRepository.findById(id)
+                .orElseThrow(() -> new SectionNotFoundException("SECTION_NOT_FOUND"));
     }
 
     /**
@@ -71,13 +67,22 @@ public class SectionService {
      * @param sectionId receives a Long sectorId to indicate where it batchstock go.
      * @param batchStocks receives a List<BatchStock> to store inside section.
      */
-    public void validateBatchStocksBySection(Long sectionId, List<BatchStock> batchStocks) {
-        Optional<Section> sectionOptional = get(sectionId);
-        if (sectionOptional.isEmpty()){
-            throw new InboundOrderValidationException("SECTION_NOT_FOUND");
-        }
+    public void validateBatchStocksBySection(Long sectorId, Long warehouseId, List<BatchStock> batchStocks) {
+        Section section = findById(sectorId);
 
-        Section section = sectionOptional.get();
+        if(section.getWarehouse().getId() != warehouseId)
+            throw new InboundOrderValidationException("SECTION_WAREHOUSE_DOES_NOT_MATCH");
+
+        boolean productMatchesSection = batchStocks.stream()
+                .map(b -> b.getProductId())
+                .anyMatch(prodId ->
+                        section.getSectionProducts().stream()
+                                .filter(sectionProduct -> sectionProduct.getProductId() == prodId)
+                                .findFirst().orElse(null) == null
+                );
+        if(productMatchesSection)
+            throw new InboundOrderValidationException("PRODUCT_SECTION_DOES_NOT_MATCH");
+
         Double availableSpace = getAvailableSpace(section);
         Double requiredSpace = getTotalBatchSize(batchStocks);
         if (requiredSpace > availableSpace){
