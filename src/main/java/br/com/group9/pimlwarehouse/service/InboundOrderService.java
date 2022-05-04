@@ -17,16 +17,14 @@ public class InboundOrderService {
 
     private WarehouseService warehouseService;
     private SectionService sectionService;
-    private BatchStockService batchStockService;
     private InboundOrderRepository inboundOrderRepository;
 
     public InboundOrderService(
-            WarehouseService warehouseService, SectionService sectionService, BatchStockService batchStockService,
+            WarehouseService warehouseService, SectionService sectionService,
             InboundOrderRepository inboundOrderRepository
     ) {
         this.warehouseService = warehouseService;
         this.sectionService  = sectionService;
-        this.batchStockService = batchStockService;
         this.inboundOrderRepository = inboundOrderRepository;
     }
 
@@ -76,8 +74,7 @@ public class InboundOrderService {
                 order.getSection().getWarehouse().getId(), order.getSection().getId(), order.getId(),
                 batchStocks
         );
-        InboundOrder orderSaved = inboundOrderRepository.save(order);
-        return orderSaved;
+        return inboundOrderRepository.save(order);
     }
 
     /**
