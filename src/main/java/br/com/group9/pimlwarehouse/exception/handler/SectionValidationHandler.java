@@ -5,7 +5,6 @@ import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException
 import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
 import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
 import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

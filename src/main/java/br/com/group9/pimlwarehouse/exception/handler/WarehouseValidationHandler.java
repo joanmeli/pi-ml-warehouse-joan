@@ -2,9 +2,7 @@ package br.com.group9.pimlwarehouse.exception.handler;
 
 import br.com.group9.pimlwarehouse.dto.ErrorMessageDTO;
 import br.com.group9.pimlwarehouse.exception.BatchStockWithdrawException;
-import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
 import br.com.group9.pimlwarehouse.exception.WarehouseNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
