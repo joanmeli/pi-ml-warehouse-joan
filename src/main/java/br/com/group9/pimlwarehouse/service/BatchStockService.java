@@ -28,7 +28,6 @@ public class BatchStockService {
     public BatchStockService(
             BatchStockRepository batchStockRepository,
             SectionService sectionService
-
     ) {
         this.batchStockRepository = batchStockRepository;
         this.sectionService = sectionService;
@@ -43,7 +42,6 @@ public class BatchStockService {
         return batchStocks.stream().map(
                 e -> batchStockRepository.save(e)).collect(Collectors.toList()
         );
-
     }
 
     /**
@@ -61,9 +59,8 @@ public class BatchStockService {
      * @return the product ID informed that it is within the validity period.
      */
     public List<BatchStock> findByProductIdWithValidShelfLife(Long productId){
-        LocalDate maxDueDate = LocalDate.now().minusDays(21);
-        List<BatchStock> byProductIdAndDueDateIsBefore = batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
-        return byProductIdAndDueDateIsBefore;
+        LocalDate maxDueDate = LocalDate.now().plusDays(21);
+        return batchStockRepository.findByProductIdAndDueDateIsAfter(productId, maxDueDate);
     }
     /**
      * Update batch stock Id.
@@ -72,9 +69,9 @@ public class BatchStockService {
      * @return return a new batch stock.
      */
 
-    private BatchStock updateBatchStock(BatchStock newBatchStock, BatchStock oldBatchStock){
-        oldBatchStock.setInitialQuantity(newBatchStock.getInitialQuantity());
-        return newBatchStock;
+    private void updateBatchStock(BatchStock newBatchStock, BatchStock oldBatchStock){
+        oldBatchStock.setCurrentQuantity(newBatchStock.getCurrentQuantity());
+        batchStockRepository.save(oldBatchStock);
     }
 
     /**
@@ -84,13 +81,13 @@ public class BatchStockService {
      * @return save the batch stock.
      */
     private List<BatchStock> updateBatchStocks(List<BatchStock> batchStocks, List<BatchStock> newBatchStocks){
-        List<BatchStock> toSaveBatchStocks =  batchStocks.stream().map(batchStock ->
+        batchStocks.forEach(batchStock ->
                 updateBatchStock(newBatchStocks.stream()
                     .filter(nb -> batchStock.getBatchNumber().equals(nb.getBatchNumber()))
                     .findAny().orElseThrow(() -> new InboundOrderValidationException("BATCH_STOCK_NOT_FOUND")), batchStock)
 
-        ).collect(Collectors.toList());
-        return  save(toSaveBatchStocks);
+        );
+        return batchStocks;
     }
 
     /**
@@ -120,24 +117,19 @@ public class BatchStockService {
      */
     public List<BatchStock> getAllBatchesByDueDate(Long sectionId, Long days, CategoryENUM category) {
         if (sectionId == null){
-            List<BatchStock> batchStocks= getAllBatchesByDueDate(days);
-            return batchStocks.stream().filter(batchStock ->
-                    batchStock.getCategory().equals(category)
-            ).collect(Collectors.toList());
+            return getAllBatchesByDueDateAndCategory(days, category);
         }
 
         Section section = sectionService.findById(sectionId);
-
-        return getAllBatchesByDueDate(section,days);
+        return getAllBatchesByDueDateAndSection(section,days);
     }
-
     /**
      * Search within the batch stock for the products that will expire in a range of days.
      * @param section receive the section of batches.
      * @param days receive amount of days.
      * @return returns the batches between the informed days and inbound order.
      */
-    public List<BatchStock> getAllBatchesByDueDate(Section section, Long days) {
+    private List<BatchStock> getAllBatchesByDueDateAndSection(Section section, Long days) {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
         return section.getInboundOrders().stream().map(
@@ -150,13 +142,11 @@ public class BatchStockService {
      * @param days receives amount of days.
      * @return returns the batches between the informed days.
      */
-    public List<BatchStock> getAllBatchesByDueDate(Long days) {
+    private List<BatchStock> getAllBatchesByDueDateAndCategory(Long days, CategoryENUM category) {
         LocalDate today = LocalDate.now();
         LocalDate upperDate = today.plusDays(days);
-        List<BatchStock> batchStocks = batchStockRepository.findAll();
-        return batchStocks.stream().map(batchStock ->
-                batchStockRepository.findByDueDateBetween(today,upperDate)
-        ).flatMap(List::stream).sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
+        return batchStockRepository.findByDueDateBetweenAndCategory(today,upperDate ,category).stream()
+                .sorted(Comparator.comparing(BatchStock::getDueDate)).collect(Collectors.toList());
     }
 
 
@@ -206,8 +196,11 @@ public class BatchStockService {
                     List<BatchStock> batchStocks = findByProductIdWithValidShelfLife(quantityByProduct.getKey());
                     validateStockQuantity(batchStocks, quantityByProduct.getValue());
                     return Map.entry(quantityByProduct.getKey(), batchStocks);
-                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (a, b) -> Stream.concat(a.stream(), b.stream()).collect(Collectors.toList())));
+                }).collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue,(a, b) -> Stream.concat(a.stream(), b.stream())
+                                .collect(Collectors.toList())
+                ));
+
         return stockByProductMap.entrySet().stream().map(s ->
                 withdrawFromStock(s.getValue(), quantityByProductMap.get(s.getKey()))
         ).flatMap(List::stream).collect(Collectors.toList());

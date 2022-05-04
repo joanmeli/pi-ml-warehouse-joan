@@ -70,7 +70,6 @@ public class InboundOrderService {
      */
 
     public InboundOrder save (InboundOrder order, List<BatchStock> batchStocks) {
-
         // Validar ordem de entrada
         validateInboundOrder(
                 order.getSection().getWarehouse().getId(), order.getSection().getId(), order.getId(),
