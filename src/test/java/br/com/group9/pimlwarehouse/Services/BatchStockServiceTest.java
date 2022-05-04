@@ -4,6 +4,7 @@ import br.com.group9.pimlwarehouse.entity.BatchStock;
 import br.com.group9.pimlwarehouse.entity.InboundOrder;
 import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.enums.CategoryENUM;
+import br.com.group9.pimlwarehouse.exception.BatchStockWithdrawException;
 import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
 import br.com.group9.pimlwarehouse.repository.BatchStockRepository;
 import br.com.group9.pimlwarehouse.service.BatchStockService;
@@ -13,9 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -119,21 +118,35 @@ public class BatchStockServiceTest {
     }
 
     @Test
-    public void shouldReturnAllBatchStocksDueDateAfter21Days() {
+    public void shouldWithdrawStockByProductId() {
 
-        BatchStock batchStock1 = BatchStock.builder().batchNumber(1).dueDate(LocalDate.now().plusDays(20)).build();
-        BatchStock batchStock2 = BatchStock.builder().batchNumber(2).dueDate(LocalDate.now().plusMonths(3)).build();
-        BatchStock batchStock3 = BatchStock.builder().batchNumber(3).dueDate(LocalDate.now().plusMonths(4)).build();
+        List<BatchStock> batchStock1 = Collections.singletonList(BatchStock.builder().currentQuantity(9).productId(1L).build());
+        List<BatchStock> batchStock2 = Collections.singletonList(BatchStock.builder().currentQuantity(10).productId(1L).build());
+        List<BatchStock> batchStock3 = Collections.singletonList(BatchStock.builder().currentQuantity(10).productId(1L).build());
 
-        List<BatchStock> orderedBatchStocks = new ArrayList<>();
-        orderedBatchStocks.add(batchStock1);
-        orderedBatchStocks.add(batchStock2);
-        orderedBatchStocks.add(batchStock3);
+        Map<Long, Integer> quantityByProductMap = new HashMap<>();
+        quantityByProductMap.put(1L, 10);
+        quantityByProductMap.put(2L, 10);
+        quantityByProductMap.put(3L, 10);
 
-        Mockito.when(batchStockRepository.findByProductIdAndDueDateIsAfter(any(Long.class), any(LocalDate.class))
-        ).thenReturn(orderedBatchStocks);
+        Mockito.when(batchStockService.findByProductIdWithValidShelfLife(1L)).thenReturn(batchStock1);
+        Mockito.when(batchStockService.findByProductIdWithValidShelfLife(2L)).thenReturn(batchStock2);
+        Mockito.when(batchStockService.findByProductIdWithValidShelfLife(3L)).thenReturn(batchStock3);
 
-        List<BatchStock> batchStockList = batchStockService.getAllBatchesByDueDate(null, 30L, CategoryENUM.FF);
-        assertEquals(orderedBatchStocks, batchStockList);
+        assertThrows(BatchStockWithdrawException.class, () -> batchStockService.withdrawStockByProductId(quantityByProductMap));
+
+        quantityByProductMap.remove(1L);
+        List<BatchStock> batchStockList = List.of(batchStock2.get(0), batchStock3.get(0));
+        Mockito.when(batchStockRepository.saveAll(batchStock2)).thenReturn(batchStock2);
+        Mockito.when(batchStockRepository.saveAll(batchStock3)).thenReturn(batchStock3);
+
+        List<BatchStock> batchStocks = batchStockService.withdrawStockByProductId(quantityByProductMap);
+        assertEquals(batchStocks, batchStockList);
+        assertEquals(batchStocks.get(0).getCurrentQuantity(), 0);
+        assertEquals(batchStocks.get(1).getCurrentQuantity(), 0);
+
+
+
+
     }
 }

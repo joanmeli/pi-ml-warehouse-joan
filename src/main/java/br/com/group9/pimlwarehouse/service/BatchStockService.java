@@ -126,8 +126,11 @@ public class BatchStockService {
                     List<BatchStock> batchStocks = findByProductIdWithValidShelfLife(quantityByProduct.getKey());
                     validateStockQuantity(batchStocks, quantityByProduct.getValue());
                     return Map.entry(quantityByProduct.getKey(), batchStocks);
-                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (a, b) -> Stream.concat(a.stream(), b.stream()).collect(Collectors.toList())));
+                }).collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue,(a, b) -> Stream.concat(a.stream(), b.stream())
+                                .collect(Collectors.toList())
+                ));
+
         return stockByProductMap.entrySet().stream().map(s ->
                 withdrawFromStock(s.getValue(), quantityByProductMap.get(s.getKey()))
         ).flatMap(List::stream).collect(Collectors.toList());
