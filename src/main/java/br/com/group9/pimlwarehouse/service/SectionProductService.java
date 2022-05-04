@@ -12,7 +12,14 @@ public class SectionProductService {
         this.sectionProductRepository = sectionProductRepository;
     }
 
+    /**
+     * Search if the productId already associated in Section informed.
+     * @param sectionProduct receives a newSectionProduct where it has a productId and Section.
+     * @return a boolean if this association exists or not exists.
+     */
     public boolean exists(SectionProduct sectionProduct) {
-        return this.sectionProductRepository.existsBySectionIdAndProductId(sectionProduct.getSection().getId(), sectionProduct.getProductId());
+        return this.sectionProductRepository.existsBySectionIdAndProductId(
+                sectionProduct.getSection().getId(), sectionProduct.getProductId()
+        );
     }
 }

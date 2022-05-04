@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductAPIService {
-    private static final String PRODUCT_API_URI = "https://4bf27f8c-fe37-4752-b67f-a9aba01d33a4.mock.pstmn.io";
-    private static final String PRODUCTS_RESOURCE = "/api/v1/fresh-products";
+    private static final String PRODUCT_API_URI = "http://products:8081";
+    private static final String PRODUCTS_RESOURCE = "/fresh-products/v1";
     private final RestTemplate restTemplate;
 
     public ProductAPIService(RestTemplateBuilder restTemplateBuilder) {
@@ -24,6 +24,13 @@ public class ProductAPIService {
                 .errorHandler(new ProductAPIErrorHandler())
                 .build();
     }
+
+    /**
+     * Fetch for product by Id in the products API.
+     * @param id receives a productId to associate a section.
+     * @return will perform a communication with the products API and returns the result.
+     * If an exception occurs, returns "PRODUCT_NOT_FOUND".
+     */
 
     public ProductDTO fetchProductById(Long id) {
         String resourceURI = PRODUCT_API_URI.concat(PRODUCTS_RESOURCE).concat("/").concat(id.toString());
@@ -42,6 +49,11 @@ public class ProductAPIService {
         }
     }
 
+    /**
+     * Search in Product API information about a products inside a list of batch stock.
+     * @param batchStockList receives a List<BatchStockDTO>.
+     * @return returns a list of products from Product API.
+     */
     public List<Map<ProductDTO, BatchStockDTO>> getProductInfo(List<BatchStockDTO> batchStockList) {
         return batchStockList.stream().map(batchStockDTO ->
                 Map.of(fetchProductById(batchStockDTO.getProductId()), batchStockDTO)

@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  appWarehouse:
+    image: 'pi-ml-warehouse:latest'
+    build:
+      context: .
+    container_name: warehouse
+    ports:
+      - "8083:8083"
+    depends_on:
+      - dbwarehouse
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbwarehouse:5432/warehouse
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  dbwarehouse:
+    image: 'postgres'
+    restart: unless-stopped
+    ports:
+      - "5435:5432"
+
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=warehouse
+networks:
+  default:
+    external:
+      name: challenge-network
