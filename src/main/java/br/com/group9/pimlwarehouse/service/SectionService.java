@@ -49,8 +49,22 @@ public class SectionService {
 
     }
 
-    public void validateBatchStocksBySection(Long sectorId, List<BatchStock> batchStocks) {
+    public void validateBatchStocksBySection(Long sectorId, Long warehouseId, List<BatchStock> batchStocks) {
         Section section = findById(sectorId);
+
+        if(section.getWarehouse().getId() != warehouseId)
+            throw new InboundOrderValidationException("SECTION_WAREHOUSE_DOES_NOT_MATCH");
+
+        boolean productMatchesSection = batchStocks.stream()
+                .map(b -> b.getProductId())
+                .anyMatch(prodId ->
+                        section.getSectionProducts().stream()
+                                .filter(sectionProduct -> sectionProduct.getProductId() == prodId)
+                                .findFirst().orElse(null) == null
+                );
+        if(productMatchesSection)
+            throw new InboundOrderValidationException("PRODUCT_SECTION_DOES_NOT_MATCH");
+
         Double availableSpace = getAvailableSpace(section);
         Double requiredSpace = getTotalBatchSize(batchStocks);
         if (requiredSpace > availableSpace){

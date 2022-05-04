@@ -46,7 +46,7 @@ public class InboundOrderService {
             throw new InboundOrderValidationException("WAREHOUSE_NOT_FOUND");
         }
         // validar o setor
-        sectionService.validateBatchStocksBySection(sectorId, batchStocks);
+        sectionService.validateBatchStocksBySection(sectorId, warehouseId, batchStocks);
 
     }
 
