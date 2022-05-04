@@ -13,11 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ProductAPIService {
-    private static final String PRODUCT_API_URI = "http://localhost:8081";
+    private static final String PRODUCT_API_URI = "http://products:8081";
     private static final String PRODUCTS_RESOURCE = "/fresh-products/v1";
     private final RestTemplate restTemplate;
 
