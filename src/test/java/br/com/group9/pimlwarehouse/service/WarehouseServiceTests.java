@@ -241,8 +241,11 @@ public class WarehouseServiceTests {
         Mockito.when(batchStockServiceMock.findByProductId(Mockito.anyLong()))
                 .thenReturn(Arrays.asList());
 
-        Map<Long, Integer> warehousesByProductMap = warehouseService.getAllWarehousesByProduct(1L);
-        Assertions.assertEquals(0, warehousesByProductMap.size());
+        RuntimeException runtimeException = Assertions.assertThrows(RuntimeException.class, () -> {
+            warehouseService.getAllWarehousesByProduct(1L);
+        });
+
+        Assertions.assertEquals("PRODUCT_NOT_FOUND", runtimeException.getMessage());
     }
 
     @Test
