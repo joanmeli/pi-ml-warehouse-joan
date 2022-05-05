@@ -26,6 +26,8 @@ public class SectionDTO {
 
     private List<SectionProductDTO> allowedProducts;
 
+    private Double availableSpace;
+
     public Section map() {
         return Section.builder()
                 .id(this.id)

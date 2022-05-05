@@ -55,7 +55,9 @@ public class SectionController extends APIController{
     @GetMapping(BASE_PATH + "/{sectionId}")
     public ResponseEntity<SectionDTO> findSection(@PathVariable(name = "sectionId") Long sectionId) {
         Section foundSection = this.sectionService.findById(sectionId);
-        return ResponseEntity.ok(SectionDTO.map(foundSection));
+        var sectionDTO = SectionDTO.map(foundSection);
+        sectionDTO.setAvailableSpace(sectionService.getAvailableSpace(foundSection));
+        return ResponseEntity.ok(sectionDTO);
     }
 
     /**
