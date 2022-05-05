@@ -7,6 +7,7 @@ import br.com.group9.pimlwarehouse.entity.Section;
 import br.com.group9.pimlwarehouse.entity.Warehouse;
 import br.com.group9.pimlwarehouse.service.SectionService;
 import br.com.group9.pimlwarehouse.service.WarehouseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -78,5 +79,16 @@ public class SectionController extends APIController{
                 .buildAndExpand(section.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(resultSection);
+    }
+
+    /**
+     * DELETE method to delete a section.
+     * @param sectionId Id of Section that will be deleted.
+     */
+    @DeleteMapping(BASE_PATH + "/{sectionId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteSections(@PathVariable Long sectionId) {
+        Section section = sectionService.findById(sectionId);
+        sectionService.delete(section);
     }
 }

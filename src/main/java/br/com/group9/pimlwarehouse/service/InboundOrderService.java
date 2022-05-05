@@ -17,16 +17,14 @@ public class InboundOrderService {
 
     private WarehouseService warehouseService;
     private SectionService sectionService;
-    private BatchStockService batchStockService;
     private InboundOrderRepository inboundOrderRepository;
 
     public InboundOrderService(
-            WarehouseService warehouseService, SectionService sectionService, BatchStockService batchStockService,
+            WarehouseService warehouseService, SectionService sectionService,
             InboundOrderRepository inboundOrderRepository
     ) {
         this.warehouseService = warehouseService;
         this.sectionService  = sectionService;
-        this.batchStockService = batchStockService;
         this.inboundOrderRepository = inboundOrderRepository;
     }
 

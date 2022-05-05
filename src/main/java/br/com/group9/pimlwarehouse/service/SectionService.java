@@ -136,4 +136,8 @@ public class SectionService {
         sectionRepository.save(section);
         return section;
     }
+
+    public void delete(Section section) {
+        sectionRepository.delete(section);
+    }
 }
