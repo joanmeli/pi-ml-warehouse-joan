@@ -76,6 +76,7 @@ public class SectionController extends APIController{
         Warehouse warehouse = warehouseService.findById(warehouseId);
         Section savedSection = sectionService.save(section, warehouse);
         SectionDTO resultSection = SectionDTO.simpleMap(savedSection);
+        resultSection.setAvailableSpace(Double.valueOf(sectionDTO.getSize()));
         URI uri = uriBuilder
                 .path(BASE_PATH.concat("/{id}"))
                 .buildAndExpand(section.getId())
