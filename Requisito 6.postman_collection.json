@@ -1,0 +1,191 @@
+{
+	"info": {
+		"_postman_id": "de6ec78e-0260-430a-98bf-1acc0f2a62f9",
+		"name": "Requisito 6",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Armazem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Warehouse Sample\",\n    \"sections\": [\n        {\n            \"minimalTemperature\": 0,\n            \"maximalTemperature\": 10,\n            \"size\": 50000\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/warehouse",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"warehouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Ordem de Entrada",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"orderNumber\": 121,\n      \"orderDate\": \"2022-04-26@18:14:43\", \n      \"section\": {\n        \"sectionCode\": 1,\n        \"warehouseCode\": 1\n      }, \n      \"batchStock\":[\n         {\n            \"batchNumber\": 123,\n            \"productId\": \"4322\",\n            \"initialQuantity\": 100,\n            \"currentQuantity\": 100,\n            \"manufacturingDateTime\": \"2022-01-23@07:53:34\",\n            \"dueDate\": \"2023-12-18\"\n         },\n         {\n            \"batchNumber\": 234,\n            \"productId\": \"3235\",\n            \"initialQuantity\": 100,\n            \"currentQuantity\": 100,\n            \"manufacturingDateTime\": \"2022-01-23@07:53:34\",\n            \"dueDate\": \"2023-12-18\"\n         }\n      ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/fresh-products/inboundorder",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"fresh-products",
+						"inboundorder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Adcionar Setor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"minimalTemperature\": 7,\n            \"maximalTemperature\": 10,\n            \"size\": 4000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/api/v1/section/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"section",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluir Setor",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"minimalTemperature\": 5,\n            \"maximalTemperature\": 10,\n            \"size\": 4000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/api/v1/section/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"section",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar Setor",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"minimalTemperature\": 5,\n            \"maximalTemperature\": 10,\n            \"size\": 200\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/api/v1/section/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"section",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Setor",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"minimalTemperature\": 5,\n            \"maximalTemperature\": 10,\n            \"size\": 4000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/api/v1/section/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"section",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
