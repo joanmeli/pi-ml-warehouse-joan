@@ -1,10 +1,7 @@
 package br.com.group9.pimlwarehouse.exception.handler;
 
 import br.com.group9.pimlwarehouse.dto.ErrorMessageDTO;
-import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException;
-import br.com.group9.pimlwarehouse.exception.ProductNotFoundException;
-import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
-import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
+import br.com.group9.pimlwarehouse.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +27,11 @@ public class SectionValidationHandler {
     }
     @ExceptionHandler(ProductDoesNotMatchSectionException.class)
     protected ResponseEntity<Object> handleProductDoesNotMatchSectionException(ProductDoesNotMatchSectionException exception) {
+        ErrorMessageDTO error = new ErrorMessageDTO(exception.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+    @ExceptionHandler(SectionValidationException.class)
+    protected ResponseEntity<Object> handleSectionValidationException(SectionValidationException exception) {
         ErrorMessageDTO error = new ErrorMessageDTO(exception.getMessage());
         return ResponseEntity.badRequest().body(error);
     }

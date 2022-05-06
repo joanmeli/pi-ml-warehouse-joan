@@ -94,4 +94,16 @@ public class SectionController extends APIController{
         Section section = sectionService.findById(sectionId);
         sectionService.delete(section);
     }
+
+    @PatchMapping(BASE_PATH + "/{sectionId}")
+    public ResponseEntity<SectionDTO> updateSection(
+            @PathVariable Long sectionId,
+            @RequestBody SectionDTO sectionDTO
+    ) {
+        Section toUpdateSection = sectionService.findById(sectionId);
+        Section newSection = sectionDTO.map();
+        sectionService.update(toUpdateSection, newSection);
+        return ResponseEntity.ok(SectionDTO.map(toUpdateSection));
+
+    }
 }

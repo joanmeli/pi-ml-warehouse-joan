@@ -2,10 +2,7 @@ package br.com.group9.pimlwarehouse.service;
 
 import br.com.group9.pimlwarehouse.dto.ProductDTO;
 import br.com.group9.pimlwarehouse.entity.*;
-import br.com.group9.pimlwarehouse.exception.ProductDoesNotMatchSectionException;
-import br.com.group9.pimlwarehouse.exception.SectionNotFoundException;
-import br.com.group9.pimlwarehouse.exception.SectionProductNotFoundException;
-import br.com.group9.pimlwarehouse.exception.InboundOrderValidationException;
+import br.com.group9.pimlwarehouse.exception.*;
 import br.com.group9.pimlwarehouse.repository.SectionRepository;
 import org.springframework.stereotype.Service;
 
@@ -140,4 +137,19 @@ public class SectionService {
     public void delete(Section section) {
         sectionRepository.delete(section);
     }
+
+    private void checkSpaceAvailabilityChange(Section toUpdateSection, Section newSection){
+        Double actualAvailableSpace = getAvailableSpace(toUpdateSection);
+        if(toUpdateSection.getSize()-actualAvailableSpace > newSection.getSize()){
+            throw new SectionValidationException("SECTION_SPACE_TOO_LOW");
+        }
+    }
+
+    public void update(Section toUpdateSection, Section newSection) {
+        checkSpaceAvailabilityChange(toUpdateSection, newSection);
+        toUpdateSection.setSize(newSection.getSize());
+        sectionRepository.save(toUpdateSection);
+    }
+
+
 }
